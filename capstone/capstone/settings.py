@@ -11,16 +11,17 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-
+import environ #for .env files
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+env = environ.Env()
+environ.Env.read_env()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ei6idsxd6ef!c_klsfijip$79xoh#l5vy02*!0*-ycj#y=1$p$'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,11 +80,11 @@ WSGI_APPLICATION = 'capstone.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'df7dfaptjidu8n',
-        'USER': 'ghpcisoyrxtrog',
-        'PASSWORD': '0533d382ba11a76da6b602aa54321e195eb0c7271d70f567c2804cc88ff638ba',
-        'HOST': 'ec2-54-147-36-107.compute-1.amazonaws.com',
-        'PORT':  '5432',
+        'NAME': env('NAME'),
+        'USER': env('USER'),
+        'PASSWORD': env('PASSWORD'),
+        'HOST': env('HOST'),
+        'PORT': '5432',
     }
 }
 
