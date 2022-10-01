@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'stopHopperAPI'
+    'stopHopperAPI',
+    'rest_framework',#django-rest framework install..gives serializers, return response, status codes etc
+    'corsheaders',#for cross port communication(django-8000)..react(3000)
 ]
 
 MIDDLEWARE = [
@@ -76,8 +78,12 @@ WSGI_APPLICATION = 'capstone.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'df7dfaptjidu8n',
+        'USER': 'ghpcisoyrxtrog',
+        'PASSWORD': '0533d382ba11a76da6b602aa54321e195eb0c7271d70f567c2804cc88ff638ba',
+        'HOST': 'ec2-54-147-36-107.compute-1.amazonaws.com',
+        'PORT':  '5432',
     }
 }
 
