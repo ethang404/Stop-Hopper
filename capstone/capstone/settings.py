@@ -77,14 +77,16 @@ WSGI_APPLICATION = 'capstone.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+#for mysql: 'django.db.backends.mysql' port: '3306'
+#for POSTgreSQL: 'django.db.backends.postgresql_psycopg2' port: '5432'
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': env('NAME'),
         'USER': env('USER'),
         'PASSWORD': env('PASSWORD'),
         'HOST': env('HOST'),
-        'PORT': '5432',
+        'PORT': '3306',
     }
 }
 

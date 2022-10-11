@@ -15,7 +15,18 @@ from django.contrib.auth.models import User
 
 
 def hello_world(request):
-    return HttpResponse("return this string")
+    request.session['routeCode'] = "7sftep63"
+    request.session['stop#1'] = "Target"
+    request.session['stop#2'] = "Walmart"
+    request.session['stop#3'] = "Sex store"
+    request.session['stop#4'] = "Outside"
+    request.session['stop#5'] = "Mesuem"
+    request.session['stop#6'] = "Park East"
+    request.session['stop#7'] = "School"
+    request.session['arriveBy'] = "7:30"
+    request.session['priorityStop#'] = "#1"
+
+    return HttpResponse("return this string" + request.session.get('routeCode'))
 
     #ideally you return something like the followin: return Response("New User Created", status=status.HTTP_201_CREATED)
     #or if returning data: return Response(serializer.data)
