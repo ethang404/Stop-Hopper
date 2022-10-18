@@ -1,17 +1,21 @@
 import "./App.css";
-import { Login, Register } from "./login_Register/";
-import { NavigateHome } from "./navigation/NavigateHome";
+import Register from "./login_Register/Register";
+import Login from "./login_Register/Login";
+import NavigateHome from "./navigation/NavigateHome";
+import RouteMenu from "./navigation/RouteMenu";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import PrivateRoute from "./utils/PrivateRoute";
 
 function App() {
 	return (
 		<div className="App">
 			<Router>
 				<Routes>
-					<Route exact path="/Login" element={<Login />}></Route>
+					<Route exact path="/" element={<Login />}></Route>
 					<Route exact path="/Register" element={<Register />}></Route>
-					<Route element={<PrivateRoutes />}>
+					<Route element={<PrivateRoute />}>
 						<Route path="/Home" element={<NavigateHome />}></Route>
+						<Route path="/RouteMenu" element={<RouteMenu />}></Route>
 					</Route>
 				</Routes>
 			</Router>

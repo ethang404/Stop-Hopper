@@ -5,5 +5,5 @@ export default function PrivateRoute() {
 	//const[userID,setUserID] = useState("");
 	//const auth = { token: temp };
 	const tempTest = true;
-	return tempTest ? <Outlet /> : <Navigate to="/Login" />;
+	return tempTest ? <Outlet /> : <Navigate to="/" />;
 }
