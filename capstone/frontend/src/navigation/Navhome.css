@@ -1,0 +1,43 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+.Container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	/*background-color: lightpink;*/
+}
+.NavigationFields {
+	display: grid;
+	padding: 30px 30px;
+	gap: 10px;
+	grid-template-columns: 1fr 1fr;
+	/*grid-auto-columns: 1fr 1fr;*/
+}
+@media (max-width: 500px) {
+	.NavigationFields {
+		grid-template-columns: 1fr;
+	}
+}
+.TextField {
+	background-color: red;
+}
+
+.JoinRoom {
+	margin: 10%;
+}
+.inputGroup {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.Popup {
+	display: flex;
+	flex-direction: column;
+}
+.Popup > .TextField {
+	background-color: green;
+}

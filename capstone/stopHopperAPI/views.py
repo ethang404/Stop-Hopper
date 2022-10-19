@@ -42,10 +42,14 @@ def hello_world(request):
 
 #How to create an Route obj(id and routeCode are auto added), have to provide foreign key relation.
 #you SHOULD use serializers for this instead..look it up :)
+
+@api_view(['POST'])
 def testing(request):
-    route = Route(user_id_id = 1)
-    route.save()
-    return HttpResponse("Model Created")
+    temp = request.data
+    print(str(temp))
+    #route = Route(user_id_id = 1)
+    #route.save()
+    return Response({str(temp),"I crave death"})
 
 
 #ideally you return something like the followin: return Response("New User Created", status=status.HTTP_201_CREATED)
