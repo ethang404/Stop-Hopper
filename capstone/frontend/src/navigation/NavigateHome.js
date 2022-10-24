@@ -2,13 +2,12 @@ import { Button, TextField, Fab } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import "./Navhome.css";
-import NavigatePopup from "./NavigatePopup";
 import { useNavigate } from "react-router-dom";
 
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
-	const [dataArr, setDataArr] = useState([]);
+
 	const [data, setData] = useState([
 		{
 			Stop: "",
@@ -72,7 +71,7 @@ export default function NavigateHome() {
 
 	async function handleSubmit() {
 		console.log(data);
-		let response = await fetch("http://127.0.0.1:8000/api/test2/", {
+		let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(data),
