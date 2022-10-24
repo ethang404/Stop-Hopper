@@ -12,6 +12,7 @@ from rest_framework import status #HTTP status codes
 from rest_framework_simplejwt.authentication import JWTAuthentication #checks if provided token is valid
 #Django model imports:
 from .models import *
+
 # Create your views here.
 
 #If you would like to custome what you pass to JWT token:
@@ -29,7 +30,10 @@ from .models import *
 
 #class MyTokenObtainPairView(TokenObtainPairView):
     #serializer_class = MyTokenObtainPairSerializer
-
+def registerUser(request):
+    user = Account.objects.create_user(username="ethang",password="pass")
+    user.save()
+    return Response({"UserCreated"})
 
 
 @permission_classes((IsAuthenticated,)) #this checks if the user is valid
@@ -44,13 +48,12 @@ def hello_world(request):
 #you SHOULD use serializers for this instead..look it up :)
 
 @api_view(['POST'])
-def testing(request):
+def submitStops(request):
     temp = request.data
     print(str(temp))
     #route = Route(user_id_id = 1)
     #route.save()
     return Response({str(temp),"I crave death"})
-
 
 #ideally you return something like the followin: return Response("New User Created", status=status.HTTP_201_CREATED)
 #or if returning data: return Response(serializer.data)
