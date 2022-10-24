@@ -18,7 +18,7 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env(overwrite=True)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -81,16 +81,17 @@ AUTH_USER_MODEL = 'stopHopperAPI.Account'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-#for mysql: 'django.db.backends.mysql' port: '3306'
-#for POSTgreSQL: 'django.db.backends.postgresql_psycopg2' port: '5432'
+# For MySQL: 'django.db.backends.mysql' port: '3306'
+# For PostgreSQL: 'django.db.backends.postgresql_psycopg2' port: '5432'
+# Defaults to a local MySQL instance
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': env('ENGINE', default='django.db.backends.mysql'),
+        'HOST': env('HOST', default='127.0.0.1'),
+        'PORT': env('PORT', default='3306'),
         'NAME': env('NAME'),
         'USER': env('USER'),
         'PASSWORD': env('PASSWORD'),
-        'HOST': env('HOST'),
-        'PORT': '3306',
     }
 }
 

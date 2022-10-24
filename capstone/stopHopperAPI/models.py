@@ -43,7 +43,7 @@ class Account(AbstractBaseUser, PermissionsMixin): #A user has many routes attac
 #A route is composed of several stops. Each stop corresponds to 1 route. Many routes go to an Account
 class Route(models.Model):
     user_id = models.ForeignKey(Account, on_delete=models.CASCADE)
-    routeCode = models.CharField(unique = True,default = get_random_string(length=6), max_length=6) #code to generate room code
+    routeCode = models.CharField(unique=True, max_length=6) #code to generate room code
     class Meta:
         db_table = 'Route'
 

@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name='Route',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('routeCode', models.CharField(default='L3deVq', max_length=6, unique=True)),
+                ('routeCode', models.CharField(max_length=6, unique=True)),
                 ('user_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={
