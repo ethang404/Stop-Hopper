@@ -1,8 +1,10 @@
-import { Button, TextField, Fab } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import "../App.css";
+import "./Login.css";
+
+import { Button, Divider, List, ListItem, ListItemText, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import "./Register.css";
 import { useNavigate } from "react-router-dom";
+
 export default function Register() {
 	let navigate = useNavigate();
 	const [detail, setDetail] = useState({ username: "", password: "" });
@@ -35,16 +37,21 @@ export default function Register() {
 	}
 	return (
 		<div>
-			This is my Login page
+			<br/>
+			Stop-Hopper Login
+			<br/>
+			<br/>
 			<TextField
 				id="filled-basic"
 				className="TextField"
-				label="UserName"
+				label="Username"
 				name="username"
 				variant="filled"
 				value={detail.username}
 				onChange={handleChange}
 			/>
+			<br/>
+			<br/>
 			<TextField
 				id="filled-basic"
 				className="TextField"
@@ -54,6 +61,8 @@ export default function Register() {
 				value={detail.password}
 				onChange={handleChange}
 			/>
+			<br/>
+			<br/>
 			<Button onClick={handleSubmit}>Login</Button>
 		</div>
 	);
