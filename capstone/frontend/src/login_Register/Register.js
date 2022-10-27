@@ -5,7 +5,7 @@ import "./Register.css";
 import { useNavigate } from "react-router-dom";
 export default function Register() {
 	let navigate = useNavigate();
-	const [detail, setDetail] = useState({ username: "", password: "" });
+	const [detail, setDetail] = useState({ username: "", password: "", email: "" });
 
 	async function handleSubmit() {
 		let response = await fetch("http://127.0.0.1:8000/api/register/", {
@@ -48,6 +48,15 @@ export default function Register() {
 				name="password"
 				variant="filled"
 				value={detail.password}
+				onChange={handleChange}
+			/>
+			<TextField
+				id="filled-basic"
+				className="TextField"
+				label="email"
+				name="email"
+				variant="filled"
+				value={detail.email}
 				onChange={handleChange}
 			/>
 			<Button onClick={handleSubmit}>Create Account</Button>

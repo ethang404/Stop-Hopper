@@ -8,7 +8,7 @@ note
 # Frontend
 #####
 # dependencies
-/node_modules
+/capstone/frontend/node_modules
 /.pnp
 .pnp.js
 
