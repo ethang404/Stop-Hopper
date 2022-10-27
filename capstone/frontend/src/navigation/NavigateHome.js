@@ -73,15 +73,20 @@ export default function NavigateHome() {
 		console.log(data);
 		let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
 			body: JSON.stringify(data),
 		});
 		let res = await response.json();
+		let code = res.RouteCode;
 		console.log(res);
+		console.log(code);
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu");
+			navigate("/RouteMenu/" + "a2zXBs");
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
@@ -90,8 +95,6 @@ export default function NavigateHome() {
 
 	return (
 		<div className="Container">
-			{JSON.stringify(data)}
-
 			<section className="StartNav">
 				<section className="NavigationFields">
 					<section className="inputGroup">
