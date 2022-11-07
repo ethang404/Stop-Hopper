@@ -5,7 +5,7 @@ import { Button, Divider, List, ListItem, ListItemText, TextField } from "@mui/m
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Login() {
 	let navigate = useNavigate();
 	const [detail, setDetail] = useState({ username: "", password: "" });
 	const [authTokens, setAuthTokens] = useState([]);
