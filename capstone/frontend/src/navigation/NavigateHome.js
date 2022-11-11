@@ -13,36 +13,43 @@ export default function NavigateHome() {
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 		{
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 		{
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 		{
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 		{
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 		{
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 		{
 			Stop: "",
 			Priority: null,
 			ArriveBy: "",
+			TaskName: "",
 		},
 	]);
 	function popUp(e) {
@@ -60,11 +67,13 @@ export default function NavigateHome() {
 		let newArr = [...data]; // copying the old datas array
 		// a deep copy is not needed as we are overriding the whole object below, and not setting a property of it. this does not mutate the state.
 		if (e.target.name === "Stop") {
-			newArr[index].Stop = e.target.value; // replace e.target.value with whatever you want to change it to
+			newArr[index].Stop = e.target.value;
 		} else if (e.target.name === "Priority") {
-			newArr[index].Priority = e.target.value; // replace e.target.value with whatever you want to change it to
+			newArr[index].Priority = e.target.value;
 		} else if (e.target.name === "ArriveBy") {
-			newArr[index].ArriveBy = e.target.value; // replace e.target.value with whatever you want to change it to
+			newArr[index].ArriveBy = e.target.value;
+		} else if (e.target.name === "TaskName") {
+			newArr[index].TaskName = e.target.value;
 		}
 		setData(newArr);
 	}
@@ -86,7 +95,7 @@ export default function NavigateHome() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu/" + "a2zXBs");
+			navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
@@ -131,6 +140,16 @@ export default function NavigateHome() {
 									value={data[0].ArriveBy}
 									onChange={(e) => handleChange(e, 0)}
 								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[0].TaskName}
+									onChange={(e) => handleChange(e, 0)}
+								/>
 							</div>
 						) : null}
 					</section>
@@ -166,6 +185,16 @@ export default function NavigateHome() {
 									name="ArriveBy"
 									variant="filled"
 									value={data[1].ArriveBy}
+									onChange={(e) => handleChange(e, 1)}
+								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[1].TaskName}
 									onChange={(e) => handleChange(e, 1)}
 								/>
 							</div>
@@ -205,6 +234,16 @@ export default function NavigateHome() {
 									value={data[2].ArriveBy}
 									onChange={(e) => handleChange(e, 2)}
 								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[2].TaskName}
+									onChange={(e) => handleChange(e, 2)}
+								/>
 							</div>
 						) : null}
 					</section>
@@ -240,6 +279,16 @@ export default function NavigateHome() {
 									name="ArriveBy"
 									variant="filled"
 									value={data[3].ArriveBy}
+									onChange={(e) => handleChange(e, 3)}
+								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[3].TaskName}
 									onChange={(e) => handleChange(e, 3)}
 								/>
 							</div>
@@ -279,6 +328,16 @@ export default function NavigateHome() {
 									value={data[4].ArriveBy}
 									onChange={(e) => handleChange(e, 4)}
 								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[4].TaskName}
+									onChange={(e) => handleChange(e, 4)}
+								/>
 							</div>
 						) : null}
 					</section>
@@ -316,6 +375,16 @@ export default function NavigateHome() {
 									value={data[5].ArriveBy}
 									onChange={(e) => handleChange(e, 5)}
 								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[5].TaskName}
+									onChange={(e) => handleChange(e, 5)}
+								/>
 							</div>
 						) : null}
 					</section>
@@ -351,6 +420,16 @@ export default function NavigateHome() {
 									name="ArriveBy"
 									variant="filled"
 									value={data[6].ArriveBy}
+									onChange={(e) => handleChange(e, 6)}
+								/>
+								<TextField
+									id="filled-basic"
+									className="TextField"
+									label="TaskName"
+									helperText="What todo"
+									name="TaskName"
+									variant="filled"
+									value={data[6].TaskName}
 									onChange={(e) => handleChange(e, 6)}
 								/>
 							</div>
