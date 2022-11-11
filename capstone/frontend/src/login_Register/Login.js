@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import "./Register.css";
 import { useNavigate } from "react-router-dom";
-export default function Register() {
+export default function Login() {
 	let navigate = useNavigate();
 	const [detail, setDetail] = useState({ username: "", password: "" });
 	const [authTokens, setAuthTokens] = useState([]);

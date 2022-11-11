@@ -9,7 +9,7 @@ import {
 import { useEffect, useState } from "react";
 export default function RouteMenu() {
 	const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
-
+	const [tasks, setTasks] = useState([]);
 	const [directions, setDirections] = useState();
 	const [stopOrder, setStopOrder] = useState();
 	const [index, setIndex] = useState(0);
