@@ -1,21 +1,27 @@
 import "../App.css";
 import "./Login.css";
 
-import {Button, IconButton, InputAdornment, TextField} from "@mui/material";
+import {Button, IconButton, InputAdornment, Switch, TextField} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 export default function Login() {
 	let navigate = useNavigate();
-	const [detail, setDetail] = useState({ username: "", password: "" });
+	const [detail, setDetail] = useState({ username: "", password: "", passwordCheck: "", email: "" });
 	const [authTokens, setAuthTokens] = useState([]);
 	// Toggle Show Password Vars
+	// Using same state for both boxes, keeping both buttons for clarity
 	const [showPassword, setShowPassword] = useState(false);
 	const handlePasswordToggle = () => setShowPassword(!showPassword);
+	// Login/Register State
+	const [showRegister, setShowRegister] = useState(false);
 
-	async function handleSubmit(e) {
-		e.preventDefault();
+	async function handleRegisterSwitch(event) {
+		setShowRegister(event.target.checked)
+	}
+
+	async function handleSubmitLogin() {
 		let response = await fetch("http://127.0.0.1:8000/api/token/", {
 			method: "POST",
 			headers: {
@@ -36,10 +42,46 @@ export default function Login() {
 			alert("Error with Credentials!");
 		}
 	}
+
+	async function handleSubmitRegister() {
+		let response = await fetch("http://127.0.0.1:8000/api/register/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(detail),
+		});
+		if (response.ok) {
+			console.log("everything is good");
+			alert("Account Created!");
+			navigate("/Login");
+		} else {
+			console.log("Something went wrong");
+			alert("Error with creating user");
+			console.log("error");
+		}
+	}
+
+	/**
+	 * Suppress the default form behavior and execute logic to login/register
+	 * depending on current state.
+	 *
+	 * @param event submit event
+	 * @returns {Promise<void>} for the respective login/register method
+	 */
+	async function handleSubmit(event) {
+		event.preventDefault();
+		if (!showRegister)
+			return handleSubmitLogin()
+		else
+			return handleSubmitRegister()
+	}
+
 	function handleChange(e) {
 		const { name, value } = e.target;
 		setDetail((prevState) => ({ ...prevState, [name]: value }));
 	}
+
 	return (
 		<form onSubmit={handleSubmit} style={{ margin: "10px" }}>
 			<div style={{
@@ -51,7 +93,12 @@ export default function Login() {
 				 }}
 				 className={"flex-container"}
 			>
-				<div>Stop-Hopper Login</div>
+				{showRegister &&
+					<div>Stop-Hopper Register Account</div>
+				}
+				{!showRegister &&
+					<div>Stop-Hopper Login</div>
+				}
 				<div>
 					<TextField
 						fullWidth
@@ -64,6 +111,20 @@ export default function Login() {
 						onChange={handleChange}
 					/>
 				</div>
+				{ showRegister &&
+					<div>
+						<TextField
+							fullWidth
+							id="email-entry"
+							className="TextField"
+							label="Email"
+							name="email"
+							variant="filled"
+							value={detail.email}
+							onChange={handleChange}
+						/>
+					</div>
+				}
 				<div>
 					<TextField
 						fullWidth
@@ -91,8 +152,52 @@ export default function Login() {
 						}}
 					/>
 				</div>
+				{ showRegister &&
+					<div>
+						<TextField
+							fullWidth
+							id="password-check-entry"
+							className="TextField"
+							label="Verify Password"
+							type={showPassword ? "text" : "password"}
+							name="passwordCheck"
+							autoComplete="current-password"
+							variant="filled"
+							value={detail.passwordCheck}
+							onChange={handleChange}
+							InputProps={{
+								endAdornment: (
+									<InputAdornment position={"end"}>
+										<IconButton
+											aria-label={"toggle password visibility"}
+											onClick={handlePasswordToggle}
+											onMouseDown={handlePasswordToggle}
+										>
+											{showPassword ? <Visibility /> : <VisibilityOff />}
+										</IconButton>
+									</InputAdornment>
+								)
+							}}
+						/>
+					</div>
+				}
 				<div>
-					<Button onClick={handleSubmit} type={"submit"}>Login</Button>
+					<Button onClick={handleSubmit} type={"submit"}>
+						{showRegister && "Register"}
+						{!showRegister && "Login"}
+					</Button>
+				</div>
+				<div style={{
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-evenly",
+					gap: "10px",
+					margin: "auto",
+					alignItems: "center"
+				 }}
+				 className={"flex-container"}>
+					<div>Register?</div>
+					<div><Switch checked={showRegister} onChange={handleRegisterSwitch}/></div>
 				</div>
 			</div>
 		</form>
