@@ -205,7 +205,6 @@ export default function Login() {
 						display: "flex",
 						justifyContent: "space-evenly",
 						gap: "10px",
-						margin: "auto",
 						alignItems: "center"
 					}}
 					className={"flex-container"}
