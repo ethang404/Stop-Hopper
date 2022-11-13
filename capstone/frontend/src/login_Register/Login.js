@@ -54,16 +54,19 @@ export default function Login() {
 
 	async function handleSubmitRegister() {
 		// Input validation
-		if (detail.username.isEmpty) {
+		if (detail.username.trim() === "") {
 			alert("Please provide a username.")
+			return
 		}
 
-		if (detail.email.isEmpty) {
+		if (detail.email.trim() === "") {
 			alert("Please provide an email.")
+			return
 		}
 
-		if (detail.password.isEmpty) {
+		if (detail.password.trim() === "") {
 			alert("Please provide a password.")
+			return
 		}
 
 		if (detail.password !== detail.passwordCheck) {
