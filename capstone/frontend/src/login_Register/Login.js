@@ -44,6 +44,11 @@ export default function Login() {
 	}
 
 	async function handleSubmitRegister() {
+		if (detail.password !== detail.passwordCheck) {
+			alert("Passwords do not match!")
+			return
+		}
+
 		let response = await fetch("http://127.0.0.1:8000/api/register/", {
 			method: "POST",
 			headers: {
