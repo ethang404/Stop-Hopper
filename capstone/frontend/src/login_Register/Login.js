@@ -55,7 +55,7 @@ export default function Login() {
 				<div>
 					<TextField
 						fullWidth
-						id="filled-basic"
+						id="username-entry"
 						className="TextField"
 						label="Username"
 						name="username"
@@ -67,7 +67,7 @@ export default function Login() {
 				<div>
 					<TextField
 						fullWidth
-						id="filled-basic"
+						id="password-entry"
 						className="TextField"
 						label="Password"
 						type={showPassword ? "text" : "password"}
