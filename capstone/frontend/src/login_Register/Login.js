@@ -181,23 +181,33 @@ export default function Login() {
 						/>
 					</div>
 				}
-				<div>
-					<Button onClick={handleSubmit} type={"submit"}>
-						{showRegister && "Register"}
-						{!showRegister && "Login"}
-					</Button>
-				</div>
-				<div style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-evenly",
-					gap: "10px",
-					margin: "auto",
-					alignItems: "center"
-				 }}
-				 className={"flex-container"}>
-					<div>Register?</div>
-					<div><Switch checked={showRegister} onChange={handleRegisterSwitch}/></div>
+				<div
+					style={{
+						display: "flex",
+						justifyContent: "space-evenly",
+						gap: "10px",
+						margin: "auto",
+						alignItems: "center"
+					}}
+					className={"flex-container"}
+				>
+					<div>
+						<Button onClick={handleSubmit} type={"submit"}>
+							{showRegister && "Register"}
+							{!showRegister && "Login"}
+						</Button>
+					</div>
+					<div style={{
+						display: "flex",
+						flexDirection: "row",
+						justifyContent: "space-evenly",
+						gap: "10px",
+						alignItems: "center"
+					 }}
+					 className={"flex-container"}>
+						<div>Register?</div>
+						<div><Switch checked={showRegister} onChange={handleRegisterSwitch}/></div>
+					</div>
 				</div>
 			</div>
 		</form>
