@@ -44,11 +44,25 @@ export default function Login() {
 	}
 
 	async function handleSubmitRegister() {
+		// Input validation
+		if (detail.username.isEmpty()) {
+			alert("Please provide a username.")
+		}
+
+		if (detail.email.isEmpty()) {
+			alert("Please provide an email.")
+		}
+
+		if (detail.password.isEmpty()) {
+			alert("Please provide a password.")
+		}
+
 		if (detail.password !== detail.passwordCheck) {
 			alert("Passwords do not match!")
 			return
 		}
 
+		// Create account via backend API
 		let response = await fetch("http://127.0.0.1:8000/api/register/", {
 			method: "POST",
 			headers: {
