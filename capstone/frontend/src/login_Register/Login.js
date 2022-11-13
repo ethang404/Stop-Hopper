@@ -8,14 +8,23 @@ import {Visibility, VisibilityOff} from "@mui/icons-material";
 
 export default function Login() {
 	let navigate = useNavigate();
-	const [detail, setDetail] = useState({ username: "", password: "", passwordCheck: "", email: "" });
+
+	// Form and Login Vars
+	const emptyDetail = { username: "", password: "", passwordCheck: "", email: "" };
+	const [detail, setDetail] = useState(emptyDetail);
 	const [authTokens, setAuthTokens] = useState([]);
+
 	// Toggle Show Password Vars
 	// Using same state for both boxes, keeping both buttons for clarity
 	const [showPassword, setShowPassword] = useState(false);
 	const handlePasswordToggle = () => setShowPassword(!showPassword);
+
 	// Login/Register State
 	const [showRegister, setShowRegister] = useState(false);
+
+	function resetDetail() {
+		setDetail(emptyDetail);
+	}
 
 	async function handleRegisterSwitch(event) {
 		setShowRegister(event.target.checked)
@@ -73,7 +82,9 @@ export default function Login() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Account Created!");
-			navigate("/Login");
+			// Go back to the login state
+			setShowRegister(false)
+			resetDetail()
 		} else {
 			console.log("Something went wrong");
 			alert("Error with creating user");
