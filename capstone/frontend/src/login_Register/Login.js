@@ -14,7 +14,8 @@ export default function Login() {
 	const [showPassword, setShowPassword] = useState(false);
 	const handlePasswordToggle = () => setShowPassword(!showPassword);
 
-	async function handleSubmit() {
+	async function handleSubmit(e) {
+		e.preventDefault();
 		let response = await fetch("http://127.0.0.1:8000/api/token/", {
 			method: "POST",
 			headers: {
@@ -40,7 +41,7 @@ export default function Login() {
 		setDetail((prevState) => ({ ...prevState, [name]: value }));
 	}
 	return (
-		<div>
+		<form onSubmit={handleSubmit}>
 			<br/>
 			Stop-Hopper Login
 			<br/>
@@ -82,7 +83,7 @@ export default function Login() {
 			/>
 			<br/>
 			<br/>
-			<Button onClick={handleSubmit}>Login</Button>
-		</div>
+			<Button onClick={handleSubmit} type={"submit"}>Login</Button>
+		</form>
 	);
 }
