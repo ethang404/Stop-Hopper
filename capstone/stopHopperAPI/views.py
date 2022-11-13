@@ -42,6 +42,76 @@ def registerUser(request):
     user.save()
     return Response({"UserCreated"})
 
+@api_view(['DELETE'])
+def deleteStop(request):
+    route = Route.objects.get(id=request.data['routeCode'])
+    stopName = request.data['stopName']
+    try:
+        stop = Stops.objects.filter(route_id_id=route.id).filter(stopAddress=stopName)[0].delete()
+        return Response({'Status':status.HTTP_200_OK, "Result":"Stop Deleted"})
+    except:
+        return Response({'Status':status.HTTP_204_NO_CONTENT, "Result":"Stop not found"})
+
+@api_view(['POST'])
+def addStop(request):
+    route = Route.objects.get(routeCode=request.data['routeCode'])
+    stopName = request.data['stopAddress']
+    try:
+        newStop = Stops(stopAddress=stopName,route_id_id=route.id)
+        newStop.save()
+        return Response({'Status':status.HTTP_201_CREATED,"Result":"Stop added"})
+    except:
+        return Response({'Status':status.HTTP_204_NO_CONTENT,"Result":"Failure to add a stop"})
+
+@api_view(['DELETE'])
+def deleteTask(request):
+    taskId = request.data['id']
+    try:
+        #answers = Stops.objects.filter(route_id_id=route.id).get(stopAddress=stopName)
+        #sId = answers.id
+        #Tasks.objects.filter(stopId_id=sId).get(taskName=tName).delete() #should I pass id instead?
+        Tasks.objects.get(id = taskId).delete()
+        return Response({'Status':status.HTTP_200_OK, "Result":"Task Deleted"})
+    except:
+        return Response({'Status':status.HTTP_204_NO_CONTENT, "Result":"Task not found"})
+
+@api_view(['POST'])
+def addTask(request):
+    routeCode = request.data['RouteCode']
+    stopName = request.data['stopAddress']
+    tName = request.data['taskName']
+
+    route = Route.objects.get(routeCode = routeCode)
+    try:
+        answers = Stops.objects.filter(route_id_id=route.id).get(stopAddress=stopName)
+        sId = answers.id
+
+        newTask = Tasks(taskName=tName,stopId_id=sId)
+        newTask.save()
+        
+        return Response({'Status':status.HTTP_201_CREATED,"Result":"Task added"})
+    except:
+        return Response({'Status':status.HTTP_204_NO_CONTENT,"Result":"Failure to add task"})
+
+@api_view(['GET'])
+def getTasks(request):
+    data = []
+    rCode = request.headers['routeCode']
+    routeId = Route.objects.get(routeCode=rCode)
+    stops = Stops.objects.filter(route_id_id=routeId.id)
+    
+    for stop in stops:
+        try:
+            print(stop.id, stop.stopAddress, stop.route_id_id)
+            tasks = Tasks.objects.filter(stopId_id = stop.id)
+            for index, task in enumerate(tasks):
+                print(task.taskName, task.stopId.id)
+                data.append({"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id})
+        except:
+            print("error", stop.stopAddress)
+            continue
+    return Response(data)
+    
 @permission_classes((IsAuthenticated,)) #this checks if the user is valid
 def hello_world(request):
     tokenResult = JWTAuthentication().authenticate(request) #this checks if the provided token(in header) is valid
@@ -71,6 +141,8 @@ def calculateRoute(request):
     #return Response(serializer.data)
 
     return Response("Calculated Route", status=status.HTTP_200_OK)
+
+
 @api_view(['POST'])
 def submitStops(request): #need to make tweaks to better handle error handling. Fine for demo
     
@@ -102,13 +174,17 @@ def submitStops(request): #need to make tweaks to better handle error handling. 
                 stop = Stops(stopAddress=obj['Stop'], route_id_id=routeId.id)
                 stop.save()
                 try:#Saving Preferences attached to Stop
-                    stopSet = Stops.objects.filter(stopAddress=obj['Stop'])[0] #this is an issue I think because if there are stopAddress with same address itll error(fix later)
+                    stopSet = Stops.objects.filter(stopAddress=obj['Stop'])[0]
                     print(stopSet.id)
+                    if obj['TaskName'] != '':
+                        tasks = Tasks(taskName=obj['TaskName'],stopId_id=stopSet.id)
+                        tasks.save()
                     if obj['Priority'] != None and obj['Priority'] !="":#dont assign preferences if things are empty/null
                         pref = Preferences(arriveBy=obj['ArriveBy'],priority=obj['Priority'],stop_id_id=stopSet.id)
                         pref.save()
                 except Stops.DoesNotExist:
                     return Response({"No Stop found"})
+                
         return Response({'Status':status.HTTP_201_CREATED, 'RouteCode':routeId.routeCode})
     else:
         return Response("Error with creating route", status=status.HTTP_406_NOT_ACCEPTABLE)
