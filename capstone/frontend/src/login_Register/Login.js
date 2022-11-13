@@ -174,6 +174,7 @@ export default function Login() {
 										aria-label={"toggle password visibility"}
 										onClick={handlePasswordToggle}
 										onMouseDown={handlePasswordToggle}
+										tabIndex={-1}
 									>
 										{showPassword ? <Visibility /> : <VisibilityOff />}
 									</IconButton>
@@ -202,6 +203,7 @@ export default function Login() {
 											aria-label={"toggle password visibility"}
 											onClick={handlePasswordToggle}
 											onMouseDown={handlePasswordToggle}
+											tabIndex={-1}
 										>
 											{showPassword ? <Visibility /> : <VisibilityOff />}
 										</IconButton>
