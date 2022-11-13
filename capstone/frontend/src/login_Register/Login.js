@@ -41,49 +41,60 @@ export default function Login() {
 		setDetail((prevState) => ({ ...prevState, [name]: value }));
 	}
 	return (
-		<form onSubmit={handleSubmit}>
-			<br/>
-			Stop-Hopper Login
-			<br/>
-			<br/>
-			<TextField
-				id="filled-basic"
-				className="TextField"
-				label="Username"
-				name="username"
-				variant="filled"
-				value={detail.username}
-				onChange={handleChange}
-			/>
-			<br/>
-			<br/>
-			<TextField
-				id="filled-basic"
-				className="TextField"
-				label="Password"
-				type={showPassword ? "text" : "password"}
-				name="password"
-				autoComplete="current-password"
-				variant="filled"
-				value={detail.password}
-				onChange={handleChange}
-				InputProps={{
-					endAdornment: (
-						<InputAdornment position={"end"}>
-							<IconButton
-								aria-label={"toggle password visibility"}
-								onClick={handlePasswordToggle}
-								onMouseDown={handlePasswordToggle}
-							>
-								{showPassword ? <Visibility /> : <VisibilityOff />}
-							</IconButton>
-						</InputAdornment>
-					)
-				}}
-			/>
-			<br/>
-			<br/>
-			<Button onClick={handleSubmit} type={"submit"}>Login</Button>
+		<form onSubmit={handleSubmit} style={{ margin: "10px" }}>
+			<div style={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "space-evenly",
+					gap: "10px",
+					margin: "auto"
+				 }}
+				 className={"flex-container"}
+			>
+				<div>Stop-Hopper Login</div>
+				<div>
+					<TextField
+						fullWidth
+						id="filled-basic"
+						className="TextField"
+						label="Username"
+						name="username"
+						variant="filled"
+						value={detail.username}
+						onChange={handleChange}
+					/>
+				</div>
+				<div>
+					<TextField
+						fullWidth
+						id="filled-basic"
+						className="TextField"
+						label="Password"
+						type={showPassword ? "text" : "password"}
+						name="password"
+						autoComplete="current-password"
+						variant="filled"
+						value={detail.password}
+						onChange={handleChange}
+						InputProps={{
+							endAdornment: (
+								<InputAdornment position={"end"}>
+									<IconButton
+										aria-label={"toggle password visibility"}
+										onClick={handlePasswordToggle}
+										onMouseDown={handlePasswordToggle}
+									>
+										{showPassword ? <Visibility /> : <VisibilityOff />}
+									</IconButton>
+								</InputAdornment>
+							)
+						}}
+					/>
+				</div>
+				<div>
+					<Button onClick={handleSubmit} type={"submit"}>Login</Button>
+				</div>
+			</div>
 		</form>
 	);
 }
