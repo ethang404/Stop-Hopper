@@ -17,8 +17,14 @@ function ShTextField(props) {
 }
 
 function ShTextFieldPassword(props) {
+	// Clone and remove props that aren't related to this component
+	// This seems like an anti-pattern/code smell
+	const childProps = { ...props}
+	delete childProps.handleToggle
+	delete childProps.showPassword
+
 	return <ShTextField
-		{...props}
+		{...childProps}
 		type={props.showPassword ? "text" : "password"}
 		autoComplete="current-password"
 		InputProps={{
