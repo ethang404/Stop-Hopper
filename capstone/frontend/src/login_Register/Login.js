@@ -6,6 +6,37 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 
+function ShTextField(props) {
+	return <TextField
+		{...props}
+		fullWidth
+		className="TextField"
+		variant="filled"
+	/>
+}
+
+function ShPasswordField(props) {
+	return <ShTextField
+		{...props}
+		type={props.showPassword ? "text" : "password"}
+		autoComplete="current-password"
+		InputProps={{
+			endAdornment: (
+				<InputAdornment position={"end"}>
+					<IconButton
+						aria-label={"toggle password visibility"}
+						onClick={props.handleToggle}
+						onMouseDown={props.handleToggle}
+						tabIndex={-1}
+					>
+						{props.showPassword ? <Visibility /> : <VisibilityOff />}
+					</IconButton>
+				</InputAdornment>
+			)
+		}}
+	/>
+}
+
 export default function Login() {
 	let navigate = useNavigate();
 
@@ -133,86 +164,46 @@ export default function Login() {
 					<div>Stop-Hopper Login</div>
 				}
 				<div>
-					<TextField
-						fullWidth
+					<ShTextField
 						id="username-entry"
-						className="TextField"
 						label="Username"
 						name="username"
-						variant="filled"
 						value={detail.username}
 						onChange={handleChange}
 					/>
 				</div>
 				{ showRegister &&
 					<div>
-						<TextField
-							fullWidth
+						<ShTextField
 							id="email-entry"
-							className="TextField"
 							label="Email"
 							name="email"
-							variant="filled"
 							value={detail.email}
 							onChange={handleChange}
 						/>
 					</div>
 				}
 				<div>
-					<TextField
-						fullWidth
+					<ShPasswordField
 						id="password-entry"
-						className="TextField"
 						label="Password"
-						type={showPassword ? "text" : "password"}
 						name="password"
-						autoComplete="current-password"
-						variant="filled"
 						value={detail.password}
 						onChange={handleChange}
-						InputProps={{
-							endAdornment: (
-								<InputAdornment position={"end"}>
-									<IconButton
-										aria-label={"toggle password visibility"}
-										onClick={handlePasswordToggle}
-										onMouseDown={handlePasswordToggle}
-										tabIndex={-1}
-									>
-										{showPassword ? <Visibility /> : <VisibilityOff />}
-									</IconButton>
-								</InputAdornment>
-							)
-						}}
+						showPassword={showPassword}
+						handleToggle={handlePasswordToggle}
 					/>
 				</div>
 				{ showRegister &&
 					<div>
-						<TextField
-							fullWidth
+						<ShPasswordField
 							id="password-check-entry"
-							className="TextField"
 							label="Verify Password"
-							type={showPassword ? "text" : "password"}
 							name="passwordCheck"
-							autoComplete="current-password"
-							variant="filled"
 							value={detail.passwordCheck}
 							onChange={handleChange}
-							InputProps={{
-								endAdornment: (
-									<InputAdornment position={"end"}>
-										<IconButton
-											aria-label={"toggle password visibility"}
-											onClick={handlePasswordToggle}
-											onMouseDown={handlePasswordToggle}
-											tabIndex={-1}
-										>
-											{showPassword ? <Visibility /> : <VisibilityOff />}
-										</IconButton>
-									</InputAdornment>
-								)
-							}}
+							showPassword={showPassword}
+							handleToggle={handlePasswordToggle}
 						/>
 					</div>
 				}
