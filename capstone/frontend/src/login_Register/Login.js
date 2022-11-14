@@ -2,7 +2,7 @@ import "../App.css";
 import "./Login.css";
 
 import {Button, IconButton, InputAdornment, Switch, TextField} from "@mui/material";
-import { useEffect, useState } from "react";
+import {Component, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import {Visibility, VisibilityOff} from "@mui/icons-material";
 
@@ -12,10 +12,11 @@ function ShTextField(props) {
 		fullWidth
 		className="TextField"
 		variant="filled"
+		error={props.helperText.trim() !== ""}
 	/>
 }
 
-function ShPasswordField(props) {
+function ShTextFieldPassword(props) {
 	return <ShTextField
 		{...props}
 		type={props.showPassword ? "text" : "password"}
@@ -53,12 +54,22 @@ export default function Login() {
 	// Login/Register State
 	const [showRegister, setShowRegister] = useState(false);
 
+	// Error States, non-empty string represents an error with the message
+	const [usernameError, setUsernameError] = useState("")
+	const [emailError, setEmailError] = useState("")
+	const [passwordError, setPasswordError] = useState("")
+	const [passwordCheckError, setPasswordCheckError] = useState("")
+
 	function resetDetail() {
 		setDetail(emptyDetail);
 	}
 
 	async function handleRegisterSwitch(event) {
 		setShowRegister(event.target.checked)
+		setUsernameError("")
+		setEmailError("")
+		setPasswordError("")
+		setPasswordCheckError("")
 	}
 
 	async function handleSubmitLogin() {
@@ -79,30 +90,38 @@ export default function Login() {
 			localStorage.setItem("refreshToken", JSON.stringify(data.refresh));
 			navigate("/Home");
 		} else {
-			alert("Error with Credentials!");
+			setPasswordError("Username or Password is incorrect")
 		}
 	}
 
 	async function handleSubmitRegister() {
 		// Input validation
 		if (detail.username.trim() === "") {
-			alert("Please provide a username.")
+			setUsernameError("Please provide a username")
 			return
+		} else {
+			setUsernameError("")
 		}
 
 		if (detail.email.trim() === "") {
-			alert("Please provide an email.")
+			setEmailError("Please provide an email")
 			return
+		} else {
+			setEmailError("")
 		}
 
 		if (detail.password.trim() === "") {
-			alert("Please provide a password.")
+			setPasswordError("Please provide a password")
 			return
+		} else {
+			setPasswordError("")
 		}
 
 		if (detail.password !== detail.passwordCheck) {
-			alert("Passwords do not match!")
+			setPasswordCheckError("Passwords do not match")
 			return
+		} else {
+			setPasswordCheckError("")
 		}
 
 		// Create account via backend API
@@ -114,15 +133,11 @@ export default function Login() {
 			body: JSON.stringify(detail),
 		});
 		if (response.ok) {
-			console.log("everything is good");
-			alert("Account Created!");
 			// Go back to the login state
 			setShowRegister(false)
 			resetDetail()
 		} else {
-			console.log("Something went wrong");
-			alert("Error with creating user");
-			console.log("error");
+			setPasswordCheckError("Failed to create account")
 		}
 	}
 
@@ -170,6 +185,7 @@ export default function Login() {
 						name="username"
 						value={detail.username}
 						onChange={handleChange}
+						helperText={usernameError}
 					/>
 				</div>
 				{ showRegister &&
@@ -180,11 +196,12 @@ export default function Login() {
 							name="email"
 							value={detail.email}
 							onChange={handleChange}
+							helperText={emailError}
 						/>
 					</div>
 				}
 				<div>
-					<ShPasswordField
+					<ShTextFieldPassword
 						id="password-entry"
 						label="Password"
 						name="password"
@@ -192,11 +209,12 @@ export default function Login() {
 						onChange={handleChange}
 						showPassword={showPassword}
 						handleToggle={handlePasswordToggle}
+						helperText={passwordError}
 					/>
 				</div>
 				{ showRegister &&
 					<div>
-						<ShPasswordField
+						<ShTextFieldPassword
 							id="password-check-entry"
 							label="Verify Password"
 							name="passwordCheck"
@@ -204,6 +222,7 @@ export default function Login() {
 							onChange={handleChange}
 							showPassword={showPassword}
 							handleToggle={handlePasswordToggle}
+							helperText={passwordCheckError}
 						/>
 					</div>
 				}
