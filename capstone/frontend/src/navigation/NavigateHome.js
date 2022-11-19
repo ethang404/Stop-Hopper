@@ -134,7 +134,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -181,7 +181,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -228,7 +228,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -275,7 +275,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -322,7 +322,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -369,7 +369,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -416,7 +416,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
