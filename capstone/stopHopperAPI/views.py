@@ -99,16 +99,23 @@ def getTasks(request):
     rCode = request.headers['routeCode']
     routeId = Route.objects.get(routeCode=rCode)
     stops = Stops.objects.filter(route_id_id=routeId.id)
+
+    #structure should be data[{Stop:"Target"}, TaskInfo:[{"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id}]]
     
-    for stop in stops:
+    for i,stop in enumerate(stops):
         try:
             print(stop.id, stop.stopAddress, stop.route_id_id)
             tasks = Tasks.objects.filter(stopId_id = stop.id)
-            for index, task in enumerate(tasks):
-                print(task.taskName, task.stopId.id)
-                data.append({"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id})
+            data.append({"Stop":stop.stopAddress,"TaskInfo":[]})
+            for index, task in enumerate(tasks): #if a stop has no tasks this wont run since its empty
+                #print(task.taskName, task.stopId.id)
+                #data.append({"Stop":stop.stopAddress,"TaskInfo":{"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id}})
+                data[i]["TaskInfo"].append({"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id})
+                print(data)
+                print("\n")
         except:
             print("error", stop.stopAddress)
+            
             continue
     return Response(data)
     

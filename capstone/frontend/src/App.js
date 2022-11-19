@@ -4,6 +4,9 @@ import Login from "./login_Register/Login";
 import NavigateHome from "./navigation/NavigateHome";
 import RouteMenu from "./navigation/RouteMenu";
 import Room from "./room/Room";
+import AddStop from "./navigation/AddStop";
+import AddTask from "./navigation/AddTask";
+
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 
@@ -18,6 +21,7 @@ function App() {
 					<Route element={<PrivateRoute />}>
 						<Route path="/Home" element={<NavigateHome />}></Route>
 						<Route path="/RouteMenu/:code" element={<RouteMenu />}></Route>
+						<Route exact path="/AddTask/:code/:stop" element={<AddTask />}></Route>
 						<Route path="/Room" element={<Room />}></Route>
 					</Route>
 				</Routes>
