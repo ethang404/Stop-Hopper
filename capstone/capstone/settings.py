@@ -86,9 +86,9 @@ AUTH_USER_MODEL = 'stopHopperAPI.Account'
 # Defaults to a local MySQL instance
 DATABASES = {
     'default': {
-        'ENGINE': env('ENGINE', default='django.db.backends.mysql'),
+        'ENGINE': env('ENGINE', default='django.db.backends.postgresql_psycopg2'),
         'HOST': env('HOST', default='127.0.0.1'),
-        'PORT': env('PORT', default='3306'),
+        'PORT': env('PORT', default='5432'),
         'NAME': env('NAME'),
         'USER': env('USER'),
         'PASSWORD': env('PASSWORD'),
@@ -178,4 +178,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000",]
-
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "routeCode"
+]
