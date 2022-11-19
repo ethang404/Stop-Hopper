@@ -149,6 +149,19 @@ def calculateRoute(request):
 
     return Response("Calculated Route", status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def deleteRoute(request):
+    try:
+        routeCode = request.data['RouteCode']
+
+        route = Route.objects.get(routeCode=routeCode)
+        route.delete()
+        return Response({'Status':status.HTTP_201_CREATED,"Result":"Route deleted"})
+    except:
+        return Response({'Status':status.HTTP_204_NO_CONTENT,"Result":"Failure to delete Route"})
+
+
+
 
 @api_view(['POST'])
 def submitStops(request): #need to make tweaks to better handle error handling. Fine for demo

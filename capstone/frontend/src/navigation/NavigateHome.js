@@ -95,7 +95,8 @@ export default function NavigateHome() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
+			navigate("/RouteMenu/" + "a2zXBs");
+			//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
