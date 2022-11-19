@@ -8,8 +8,9 @@ import {
 	DirectionsService,
 } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
-import { Button, TextField } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
+import StarsIcon from '@mui/icons-material/Stars';
+import { Fab, Button, TextField } from "@mui/material";
 
 export default function RouteMenu() {
 	const { code } = useParams();
@@ -24,6 +25,7 @@ export default function RouteMenu() {
 	const [isActive, setIsActive] = useState(false);
 	const [selected, setSelected] = useState("Pick a Stop");
 	const [taskInput, setTaskInput] = useState("");
+	const [isFavorite,setFavorite] = useState(false)
 
 	const [newTask, setNewTask] = useState({
 		RouteCode: code,
@@ -90,6 +92,23 @@ export default function RouteMenu() {
 			console.log("error");
 		}
 	}
+	async function logout(){
+		if(isFavorite){
+			navigate("/");
+		}
+		else{//if user not favorited the stop-remove from databse-redirect to home after
+			let resp = await fetch("http://127.0.0.1:8000/api/deleteRoute/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
+		});
+		console.log(resp.JSON)
+			navigate("/");
+		}
+	}
 
 	const center = {
 		lat: 33.579166,
@@ -140,9 +159,7 @@ export default function RouteMenu() {
 			setCurrentLocation({ currentLocation: pos });
 		});
 	};*/
-
-	//on button click for add task: navigate to new component(pass routeCode and stop Address). Finish adding stop->navigate back here
-
+	
 	return (
 		<div>
 			<div className="mainMenu">
@@ -230,6 +247,11 @@ export default function RouteMenu() {
 					</Button>
 				</section>
 			</div>
+			<Fab size="small" className="detailButton" aria-label="edit" onClick={() => setFavorite(true)}>
+				<StarsIcon/>
+			</Fab>
+			{JSON.stringify(isFavorite)}
+			<Button onClick={logout}>Logout</Button>
 		</div>
 	);
 }

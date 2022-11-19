@@ -12,6 +12,7 @@ urlpatterns = [
     path('deleteStop/',deleteStop),
     path('addStop/',addStop),
     path('getRoute/',calculateRoute),
+    path('deleteRoute/',deleteRoute),
     path('getTasks/',getTasks),
     path('addTask/',addTask),
     path('deleteTask/',deleteTask),
