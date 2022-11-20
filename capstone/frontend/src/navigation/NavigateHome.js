@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
-
+	const [code,setCode] = useState("")
 	const [data, setData] = useState([
 		{
 			Stop: "",
@@ -95,8 +95,7 @@ export default function NavigateHome() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu/" + "a2zXBs");
-			//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
+			navigate("/RouteMenu/" + code); //make dynamic later
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
@@ -448,8 +447,8 @@ export default function NavigateHome() {
 			</section>
 			<h3>--Or--</h3>
 			<section className="JoinRoom">
-				<TextField id="standard-basic" label="RoomCode" variant="standard" />
-				<Button variant="outlined" color="error" className="JoinRoomButton">
+				<TextField id="standard-basic" label="RoomCode" variant="standard" value = {code} onChange={(e) => setCode(e.target.value)}/>
+				<Button variant="outlined" color="error" className="JoinRoomButton" onClick={() => navigate('/Room/'+code)}>
 					Join Route Room
 				</Button>
 			</section>

@@ -31,7 +31,10 @@ export default function Register() {
 	}
 	return (
 		<div>
-			This is my Register page
+			<br/>
+			Welcome to the Registration page
+			<br/>
+			<br/>
 			<TextField
 				id="filled-basic"
 				className="TextField"

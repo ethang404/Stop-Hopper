@@ -29,13 +29,21 @@ export default function Login() {
 			alert("Error with Credentials!");
 		}
 	}
+	async function handleSubmitRegistration() {
+		navigate("/Register");
+	}
+
 	function handleChange(e) {
 		const { name, value } = e.target;
 		setDetail((prevState) => ({ ...prevState, [name]: value }));
 	}
 	return (
 		<div>
-			This is my Login page
+			<br/>
+			<br/>
+			Welcome to the Login page
+			<br/>
+			<br/> 
 			<TextField
 				id="filled-basic"
 				className="TextField"
@@ -55,6 +63,9 @@ export default function Login() {
 				onChange={handleChange}
 			/>
 			<Button onClick={handleSubmit}>Login</Button>
+			<br/>
+			<br/>
+			<Button onClick={handleSubmitRegistration}>Register</Button>
 		</div>
 	);
 }

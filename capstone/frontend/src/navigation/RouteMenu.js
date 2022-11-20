@@ -56,7 +56,7 @@ export default function RouteMenu() {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
-			body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
+			body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
 		});
 		let data = await resp.json();
 		setStopOrder(data);
@@ -66,7 +66,7 @@ export default function RouteMenu() {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
-				routeCode: "a2zXBs",
+				routeCode: code,
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
 		});
