@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
+	const [favRoutes, setFavRoutes] = useState([]);
 
 	const [data, setData] = useState([
 		{
@@ -78,6 +79,22 @@ export default function NavigateHome() {
 		setData(newArr);
 	}
 
+	useEffect(() => {
+		getFavRoutes();
+	}, []);
+	async function getFavRoutes() {
+		let resp = await fetch("http://127.0.0.1:8000/api/getRoutes/", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+				routeCode: "a2zXBs",
+			},
+		});
+		let data = await resp.json();
+		console.log(data);
+		setFavRoutes(data);
+	}
 	async function handleSubmit() {
 		console.log(data);
 		let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
@@ -102,9 +119,15 @@ export default function NavigateHome() {
 			console.log("error");
 		}
 	}
-
+	//map fav routes
 	return (
 		<div className="Container">
+			<h2>List of Favorited Routes: </h2>
+			{favRoutes.map((route) => (
+				<div key={route.id} onClick={() => navigate("/RouteMenu/" + route.routeCode)}>
+					<h3>{route.routeCode}</h3>
+				</div>
+			))}
 			<section className="StartNav">
 				<section className="NavigationFields">
 					<section className="inputGroup">
