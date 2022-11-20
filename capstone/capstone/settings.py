@@ -86,9 +86,9 @@ AUTH_USER_MODEL = 'stopHopperAPI.Account'
 # Defaults to a local MySQL instance
 DATABASES = {
     'default': {
-        'ENGINE': env('ENGINE', default='django.db.backends.postgresql_psycopg2'),
+        'ENGINE': env('ENGINE', default='django.db.backends.mysql'),
         'HOST': env('HOST', default='127.0.0.1'),
-        'PORT': env('PORT', default='5432'),
+        'PORT': env('PORT', default='3306'),
         'NAME': env('NAME'),
         'USER': env('USER'),
         'PASSWORD': env('PASSWORD'),
@@ -131,7 +131,7 @@ SIMPLE_JWT = {#All settings for JWT Tokens
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=45),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 

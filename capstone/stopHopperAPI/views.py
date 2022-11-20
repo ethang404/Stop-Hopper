@@ -144,12 +144,31 @@ def calculateRoute(request):
     return Response(myData)
     #serializer = StopsSerializer(stops, many=True)
     #data = serializer.data
+    
     #print(data)
     #return Response(serializer.data)
 
     return Response("Calculated Route", status=status.HTTP_200_OK)
+@api_view(['GET'])
+def getRoutes(request):
+    token = request.headers['Authorization'].split(' ')[1]
+    #routeCode = request.headers['routeCode']
+    token = jwt.decode(token, env('SECRET_KEY'), algorithms=["HS256"])
+    print(token)
+    print(token['user_id'])
 
-@api_view(['POST'])
+    data = []
+    routes = Route.objects.filter(user_id_id=token['user_id'])
+    counter = 0
+    for route in routes:
+        if counter < 10:
+            data.append({"id":route.id,"routeCode":route.routeCode,"user_id":route.user_id_id})
+            counter += 1
+        else:
+            return Response(data, status=status.HTTP_200_OK)
+    return Response(data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
 def deleteRoute(request):
     try:
         routeCode = request.data['RouteCode']
