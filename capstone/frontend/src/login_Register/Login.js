@@ -1,17 +1,18 @@
 import "../App.css";
 import "./Login.css";
 
-import {Button, IconButton, InputAdornment, Switch, TextField} from "@mui/material";
-import {Component, useState} from "react";
+import { IconButton, InputAdornment, styled, Switch, TextField } from "@mui/material";
+import Button from '@mui/material/Button';
+import { Component, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {Visibility, VisibilityOff} from "@mui/icons-material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function ShTextField(props) {
 	return <TextField
 		{...props}
 		fullWidth
 		className="TextField"
-		variant="filled"
+		variant="outlined"
 		error={props.helperText.trim() !== ""}
 	/>
 }
@@ -167,6 +168,15 @@ export default function Login() {
 		setDetail((prevState) => ({ ...prevState, [name]: value }));
 	}
 
+	// Used for the login/register submit button
+	const ColorButton = styled(Button)(({ theme }) => ({
+	    color: "#000000",
+	    backgroundColor: "#fc7676",
+	    '&:hover': {
+			backgroundColor: "#c25b5b",
+	    },
+	}));
+
 	return (
 		<form onSubmit={handleSubmit} style={{ margin: "10px" }}>
 			<div style={{
@@ -174,17 +184,23 @@ export default function Login() {
 					flexDirection: "column",
 					justifyContent: "space-evenly",
 					gap: "10px",
-					margin: "auto"
-				 }}
-				 className={"flex-container"}
-			>
-				{showRegister &&
-					<div>Stop-Hopper Register Account</div>
-				}
-				{!showRegister &&
-					<div>Stop-Hopper Login</div>
-				}
-				<div>
+					margin: "auto",
+				 	backgroundColor: "#FFFFFF",
+					borderRadius: "5px", }}
+				 className={"flex-container"} >
+				<div style={{
+						marginTop: "10px",
+						marginLeft: "10px",
+						marginRight: "10px",
+						fontSize: "24px",
+						backgroundColor: "#fc7676",
+						borderRadius: "5px"}}>
+					<div style={{margin: "5px"}}>
+						{showRegister && "Stop-Hopper Account Creation"}
+						{!showRegister && "Stop-Hopper Account Login"}
+					</div>
+				</div>
+				<div style={{marginLeft: "10px", marginRight: "10px"}}>
 					<ShTextField
 						id="username-entry"
 						label="Username"
@@ -195,7 +211,7 @@ export default function Login() {
 					/>
 				</div>
 				{ showRegister &&
-					<div>
+					<div style={{marginLeft: "10px", marginRight: "10px"}}>
 						<ShTextField
 							id="email-entry"
 							label="Email"
@@ -206,7 +222,7 @@ export default function Login() {
 						/>
 					</div>
 				}
-				<div>
+				<div style={{marginLeft: "10px", marginRight: "10px"}}>
 					<ShTextFieldPassword
 						id="password-entry"
 						label="Password"
@@ -219,7 +235,7 @@ export default function Login() {
 					/>
 				</div>
 				{ showRegister &&
-					<div>
+					<div style={{marginLeft: "10px", marginRight: "10px"}}>
 						<ShTextFieldPassword
 							id="password-check-entry"
 							label="Verify Password"
@@ -232,30 +248,41 @@ export default function Login() {
 						/>
 					</div>
 				}
-				<div
-					style={{
+				<div style={{
 						display: "flex",
 						justifyContent: "space-evenly",
 						gap: "10px",
-						alignItems: "center"
-					}}
-					className={"flex-container"}
-				>
-					<div>
-						<Button onClick={handleSubmit} type={"submit"}>
+						alignItems: "center" }}
+					className={"flex-container"} >
+					<div style={{
+							width: "100%",
+							height: "100%",
+							marginLeft: "10px",
+							marginBottom: "10px"}} >
+						<ColorButton
+							onClick={handleSubmit}
+							type={"submit"}
+							style={{fontSize: "12pt", color: "#000000"}}
+							sx={{ boxShadow: 0 }}
+							fullWidth
+							variant={"contained"}>
 							{showRegister && "Register"}
 							{!showRegister && "Login"}
-						</Button>
+						</ColorButton>
 					</div>
 					<div style={{
 						display: "flex",
 						flexDirection: "row",
 						justifyContent: "space-evenly",
-						gap: "10px",
-						alignItems: "center"
-					 }}
-					 className={"flex-container"}>
-						<div>Register?</div>
+						alignItems: "center",
+						width: "100%",
+						height: "100%",
+						marginRight: "10px",
+						marginBottom: "10px",
+						backgroundColor: "#fc7676",
+						borderRadius: "5px" }}
+					className={"flex-container"}>
+						<div>REGISTER?</div>
 						<div><Switch checked={showRegister} onChange={handleRegisterSwitch}/></div>
 					</div>
 				</div>
