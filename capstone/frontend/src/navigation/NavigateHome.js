@@ -38,6 +38,50 @@ function StopEntryField(props) {
 }
 
 /**
+ * Various entry fields to edit properties of a stop.
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function StopEdit(props) {
+	const childProps = {...props}
+	delete childProps.editStop
+
+	return <div>
+			<TextField
+				id="outlined-number"
+				type="number"
+				className="TextField"
+				label="Priority(1-7): "
+				name="Priority"
+				// value={data[0].Priority}
+				// onChange={(e) => handleChange(e, 0)}
+			/>
+			<TextField
+				id="filled-basic"
+				className="TextField"
+				label="Arrive By: "
+				helperText="What time to arrive at stop by"
+				name="ArriveBy"
+				variant="filled"
+				// value={data[0].ArriveBy}
+				// onChange={(e) => handleChange(e, 0)}
+			/>
+			<TextField
+				id="filled-basic"
+				className="TextField"
+				label="TaskName"
+				helperText="What todo"
+				name="TaskName"
+				variant="filled"
+				// value={data[0].TaskName}
+				// onChange={(e) => handleChange(e, 0)}
+			/>
+		</div>
+}
+
+/**
  * A component that renders a list of stops.
  * Spans the height of the screen by default, the width can be passed in.
  */
@@ -111,8 +155,8 @@ class StopList extends Component {
 				marginRight: "10px", }} >
 			{
 				this.state.stops.map((curVal, index, arr) => {
-					return <StopEntryField
-							key={index}
+					return <div key={index}>
+						<StopEntryField
 							id={index.toString()}
 							label={"Stop #" + (index + 1).toString()}
 							name={"Stop"}
@@ -120,6 +164,13 @@ class StopList extends Component {
 							onChange={this.updateStop.bind(this)}
 							editStop={(e) => this.toggleEdit.bind(this)(e, index)}
 						/>
+						{ this.state.stops[index].Edit &&
+							<StopEdit
+								id={index.toString()}
+
+							/>
+						}
+					</div>
 				})
 			}
 			</div>
