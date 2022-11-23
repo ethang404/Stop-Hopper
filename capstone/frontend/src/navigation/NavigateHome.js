@@ -1,8 +1,16 @@
-import { Button, TextField, Fab, InputAdornment, IconButton } from "@mui/material";
+import {Button, TextField, Fab, InputAdornment, IconButton, styled} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Component, useEffect, useState } from "react";
 import "./Navhome.css";
 import { useNavigate } from "react-router-dom";
+
+const ColorButton = styled(Button)(({ theme }) => ({
+	color: "#000000",
+	backgroundColor: "#fc7676",
+	'&:hover': {
+		backgroundColor: "#c25b5b",
+	},
+}));
 
 /**
  * Base text field
@@ -107,6 +115,33 @@ function StopEdit(props) {
 		</div>
 }
 
+function JoinRoom(props) {
+	return <div
+		{...props}
+		className={"flex-container"}
+		style={{
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-evenly",
+			backgroundColor: "#FFFFFF",
+			borderRadius: "5px",}} >
+			<ShTextField
+				id="room-code-label"
+				label="Route Code"
+				variant="standard"
+				style={{margin: "10px", flex: 2}}
+				size={"small"}
+			/>
+			<ColorButton
+				variant="contained"
+				className="JoinRoomButton"
+				style={{margin: "10px", flex: 1}}
+				sx={{ boxShadow: 0 }} >
+				Join Route
+			</ColorButton>
+		</div>
+}
+
 /**
  * A component that renders a list of stops.
  * Spans the height of the screen by default, the width can be passed in.
@@ -164,10 +199,8 @@ class StopList extends Component {
 				flexDirection: "column",
 				justifyContent: "space-evenly",
 				gap: "10px",
-				margin: "auto",
 				backgroundColor: "#FFFFFF",
-				borderRadius: "5px", }}
-			className={"flex-container"} >
+				borderRadius: "5px", }} >
 			{/* List Stops */}
 			<div style={{
 				display: "flex",
@@ -358,9 +391,19 @@ export default function NavigateHome() {
 	// }
 
 	return (
-		<StopList>
-
-		</StopList>
+		<div
+			className={"flex-container"}
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				marginLeft: "auto",
+				marginRight: "auto",
+				marginTop: "10px", }} >
+			<JoinRoom/>
+			<StopList/>
+		</div>
 	)
 
 	// return (
