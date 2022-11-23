@@ -119,12 +119,9 @@ class StopList extends Component {
 	}
 
 	updateStopLogic(event, index, key, value) {
-		console.log(this.state.stops)
-		console.log(value)
 		const newStops = [...this.state.stops]
 		newStops[index][key] = value
 		this.setState({stops: newStops})
-		console.log(this.state.stops)
 	}
 
 	updateStop(event) {
