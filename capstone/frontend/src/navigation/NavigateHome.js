@@ -59,37 +59,50 @@ function StopEntryField(props) {
  */
 function StopEdit(props) {
 	const childProps = {...props}
-	delete childProps.editStop
+	delete childProps.priorityValue
+	delete childProps.arriveValue
+	delete childProps.notesValue
+	delete childProps.onChange
 
-	return <div>
-			<TextField
-				id="outlined-number"
-				type="number"
-				className="TextField"
-				label="Priority(1-7): "
-				name="Priority"
-				// value={data[0].Priority}
-				// onChange={(e) => handleChange(e, 0)}
-			/>
-			<TextField
-				id="filled-basic"
-				className="TextField"
-				label="Arrive By: "
-				helperText="What time to arrive at stop by"
-				name="ArriveBy"
-				variant="filled"
-				// value={data[0].ArriveBy}
-				// onChange={(e) => handleChange(e, 0)}
-			/>
-			<TextField
-				id="filled-basic"
-				className="TextField"
-				label="TaskName"
-				helperText="What todo"
-				name="TaskName"
-				variant="filled"
-				// value={data[0].TaskName}
-				// onChange={(e) => handleChange(e, 0)}
+	return <div
+		{...childProps}
+		style={{
+			marginLeft: "10px",
+			marginRight: "10px",
+			marginTop: "10px",
+			display: "flex",
+			flexDirection: "column",
+			justifyContent: "space-evenly",
+			gap: "10px", }} >
+			<div
+				{...childProps}
+				style={{
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-evenly",
+				gap: "10px", }} >
+				<ShTextField
+					{...childProps}
+					type={"number"}
+					label={"Priority (1-7)"}
+					name={"Priority"}
+					value={props.priorityValue}
+					onChange={props.onChange}
+				/>
+				<ShTextField
+					{...childProps}
+					label={"Arrive By"}
+					name={"ArriveBy"}
+					value={props.arriveValue}
+					onChange={props.onChange}
+				/>
+			</div>
+			<ShTextField
+				{...childProps}
+				label={"Notes"}
+				name={"TaskName"}
+				value={props.notesValue}
+				onChange={props.onChange}
 			/>
 		</div>
 }
@@ -177,6 +190,10 @@ class StopList extends Component {
 						{ this.state.stops[index].Edit &&
 							<StopEdit
 								id={index.toString()}
+								priorityValue={this.state.stops[index].Priority}
+								arriveValue={this.state.stops[index].ArriveBy}
+								notesValue={this.state.stops[index].TaskName}
+								onChange={this.updateStop.bind(this)}
 							/>
 						}
 					</div>
