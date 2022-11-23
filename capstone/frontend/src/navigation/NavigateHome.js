@@ -12,6 +12,21 @@ const ColorButton = styled(Button)(({ theme }) => ({
 	},
 }));
 
+function ShThemeDiv(props) {
+	const newStyle = (props.style === undefined) ? {} : {...props.style}
+	if (newStyle.backgroundColor === undefined)
+		newStyle.backgroundColor = "#FFFFFF"
+	if (newStyle.borderRadius === undefined)
+		newStyle.borderRadius = "5px"
+
+	const newProps = {...props}
+	newProps.style = newStyle
+
+	return <div
+		{...newProps}
+	/>
+}
+
 /**
  * Base text field
  *
@@ -116,15 +131,13 @@ function StopEdit(props) {
 }
 
 function JoinRoom(props) {
-	return <div
+	return <ShThemeDiv
 		{...props}
 		className={"flex-container"}
 		style={{
 			display: "flex",
 			flexDirection: "row",
-			justifyContent: "space-evenly",
-			backgroundColor: "#FFFFFF",
-			borderRadius: "5px",}} >
+			justifyContent: "space-evenly", }} >
 			<ShTextField
 				id="room-code-label"
 				label="Route Code"
@@ -139,7 +152,7 @@ function JoinRoom(props) {
 				sx={{ boxShadow: 0 }} >
 				Join Route
 			</ColorButton>
-		</div>
+		</ShThemeDiv>
 }
 
 /**
@@ -194,13 +207,11 @@ class StopList extends Component {
 	}
 
 	render() {
-		return <div style={{
+		return <ShThemeDiv style={{
 				display: "flex",
 				flexDirection: "column",
 				justifyContent: "space-evenly",
-				gap: "10px",
-				backgroundColor: "#FFFFFF",
-				borderRadius: "5px", }} >
+				gap: "10px", }} >
 			{/* List Stops */}
 			<div style={{
 				display: "flex",
@@ -239,7 +250,7 @@ class StopList extends Component {
 					Add Stop
 				</Button>
 			</div>
-		</div>
+		</ShThemeDiv>
 	}
 }
 
