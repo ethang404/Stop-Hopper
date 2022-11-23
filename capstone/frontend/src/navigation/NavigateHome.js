@@ -138,7 +138,7 @@ class StopList extends Component {
 	}
 
 	updateStop(event) {
-		this.updateStopLogic(event, parseInt(event.target.id), event.target.name, event.target.value)
+		this.updateStopLogic(event, parseInt(event.target.index), event.target.name, event.target.value)
 	}
 
 	toggleEdit(event, index) {
@@ -167,7 +167,8 @@ class StopList extends Component {
 				this.state.stops.map((curVal, index, arr) => {
 					return <div key={index}>
 						<StopEntryField
-							id={index.toString()}
+							id={"stop-entry-" + index.toString()}
+							index={index}
 							label={"Stop #" + (index + 1).toString()}
 							name={"Stop"}
 							value={this.state.stops[index].Stop}
@@ -176,8 +177,8 @@ class StopList extends Component {
 						/>
 						{ this.state.stops[index].Edit &&
 							<StopEdit
-								id={index.toString()}
-
+								id={"stop-edit-" + index.toString()}
+								index={index}
 							/>
 						}
 					</div>
