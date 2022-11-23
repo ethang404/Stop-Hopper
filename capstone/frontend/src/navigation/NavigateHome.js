@@ -1,8 +1,7 @@
-import {Button, TextField, Fab, InputAdornment, IconButton, styled} from "@mui/material";
+import {Button, TextField, InputAdornment, IconButton, styled} from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { Component, useEffect, useState } from "react";
+import { Component } from "react";
 import "./Navhome.css";
-import { useNavigate } from "react-router-dom";
 
 const ColorButton = styled(Button)(({ theme }) => ({
 	color: "#000000",
@@ -87,16 +86,15 @@ function StopEdit(props) {
 	delete childProps.notesValue
 	delete childProps.onChange
 
-	return <div
-		{...childProps}
-		style={{
-			marginLeft: "10px",
-			marginRight: "10px",
-			marginTop: "10px",
-			display: "flex",
-			flexDirection: "column",
-			justifyContent: "space-evenly",
-			gap: "10px", }} >
+	return <ShThemeDiv>
+		<div
+			{...childProps}
+			style={{
+				margin: "10px",
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-evenly",
+				gap: "10px", }} >
 			<div
 				{...childProps}
 				style={{
@@ -128,31 +126,35 @@ function StopEdit(props) {
 				onChange={props.onChange}
 			/>
 		</div>
+	</ShThemeDiv>
 }
 
 function JoinRoom(props) {
-	return <ShThemeDiv
-		{...props}
-		className={"flex-container"}
-		style={{
-			display: "flex",
-			flexDirection: "row",
-			justifyContent: "space-evenly", }} >
+	return <ShThemeDiv>
+		<div
+			{...props}
+			style={{
+				margin: "10px",
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-evenly",
+				gap: "10px", }} >
 			<ShTextField
 				id="room-code-label"
 				label="Route Code"
 				variant="standard"
-				style={{margin: "10px", flex: 2}}
+				style={{flex: 2}}
 				size={"small"}
 			/>
 			<ColorButton
 				variant="contained"
 				className="JoinRoomButton"
-				style={{margin: "10px", flex: 1}}
+				style={{flex: 1}}
 				sx={{ boxShadow: 0 }} >
 				Join Route
 			</ColorButton>
-		</ShThemeDiv>
+		</div>
+	</ShThemeDiv>
 }
 
 /**
@@ -207,48 +209,49 @@ class StopList extends Component {
 	}
 
 	render() {
-		return <ShThemeDiv style={{
+		return <ShThemeDiv>
+			<div style={{
+				margin: "10px",
 				display: "flex",
 				flexDirection: "column",
 				justifyContent: "space-evenly",
 				gap: "10px", }} >
-			{/* List Stops */}
-			<div style={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "space-evenly",
-				gap: "10px",
-				marginLeft: "10px",
-				marginRight: "10px", }} >
-			{
-				this.state.stops.map((curVal, index, arr) => {
-					return <div key={index}>
-						<StopEntryField
-							id={index.toString()}
-							label={"Stop #" + (index + 1).toString()}
-							name={"Stop"}
-							value={this.state.stops[index].Stop}
-							onChange={this.updateStop.bind(this)}
-							editStop={(e) => this.toggleEdit.bind(this)(e, index)}
-						/>
-						{ this.state.stops[index].Edit &&
-							<StopEdit
+				{/* List Stops */}
+				<div style={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "space-evenly",
+					gap: "10px", }} >
+				{
+					this.state.stops.map((curVal, index, arr) => {
+						return <div key={index}>
+							<StopEntryField
 								id={index.toString()}
-								priorityValue={this.state.stops[index].Priority}
-								arriveValue={this.state.stops[index].ArriveBy}
-								notesValue={this.state.stops[index].TaskName}
+								label={"Stop #" + (index + 1).toString()}
+								name={"Stop"}
+								value={this.state.stops[index].Stop}
 								onChange={this.updateStop.bind(this)}
+								editStop={(e) => this.toggleEdit.bind(this)(e, index)}
 							/>
-						}
-					</div>
-				})
-			}
-			</div>
-			{/* Add Stop Button */}
-			<div>
-				<Button onClick={this.addStop.bind(this)}>
-					Add Stop
-				</Button>
+							{ this.state.stops[index].Edit &&
+								<StopEdit
+									id={index.toString()}
+									priorityValue={this.state.stops[index].Priority}
+									arriveValue={this.state.stops[index].ArriveBy}
+									notesValue={this.state.stops[index].TaskName}
+									onChange={this.updateStop.bind(this)}
+								/>
+							}
+						</div>
+					})
+				}
+				</div>
+				{/* Add Stop Button */}
+				<div>
+					<Button onClick={this.addStop.bind(this)}>
+						Add Stop
+					</Button>
+				</div>
 			</div>
 		</ShThemeDiv>
 	}
