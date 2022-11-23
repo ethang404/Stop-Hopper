@@ -5,6 +5,22 @@ import "./Navhome.css";
 import { useNavigate } from "react-router-dom";
 
 /**
+ * Base text field
+ *
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function ShTextField(props) {
+	return <TextField
+		{...props}
+		fullWidth
+		className="TextField"
+		variant="outlined"
+	/>
+}
+
+/**
  * A Text entry field for stops which has an edit button.
  *
  * @param props
@@ -15,11 +31,8 @@ function StopEntryField(props) {
 	const childProps = {...props}
 	delete childProps.editStop
 
-	return <TextField
+	return <ShTextField
 		{...childProps}
-		fullWidth
-		className="TextField"
-		variant="outlined"
 		error={(props.helperText === undefined) ? false : props.helperText.trim() !== ""}
 		InputProps={{
 			endAdornment: (
