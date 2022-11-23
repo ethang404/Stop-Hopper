@@ -52,18 +52,11 @@ class StopList extends Component {
 		// 	ArriveBy: "",
 		// 	TaskName: "",
 		// }
-		//
-		// Modal is set to the index of the stop being edited, null when not shown
 
 		this.state = {
 			stops: [],
-			popUp: false,
-			modal: null
+			popUp: false
 		}
-	}
-
-	togglePopUp() {
-		this.setState((state) => ({popUp: !state.popUp}))
 	}
 
 	/**
