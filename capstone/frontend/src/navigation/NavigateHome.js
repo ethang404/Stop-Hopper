@@ -247,11 +247,13 @@ class StopList extends Component {
 				}
 				</div>
 				{/* Add Stop Button */}
+				{ this.state.stops.length < 7 &&
 				<div>
 					<Button onClick={this.addStop.bind(this)}>
 						Add Stop
 					</Button>
 				</div>
+				}
 			</div>
 		</ShThemeDiv>
 	}
