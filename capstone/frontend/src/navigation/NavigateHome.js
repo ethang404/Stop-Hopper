@@ -1,47 +1,9 @@
-import {Button, TextField, InputAdornment, IconButton, styled} from "@mui/material";
+import { InputAdornment, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { Component } from "react";
 import "./Navhome.css";
-import {useNavigate} from "react-router-dom";
-
-const ColorButton = styled(Button)(({ theme }) => ({
-	color: "#000000",
-	backgroundColor: "#fc7676",
-	'&:hover': {
-		backgroundColor: "#c25b5b",
-	},
-}));
-
-function ShThemeDiv(props) {
-	const newStyle = (props.style === undefined) ? {} : {...props.style}
-	if (newStyle.backgroundColor === undefined)
-		newStyle.backgroundColor = "#FFFFFF"
-	if (newStyle.borderRadius === undefined)
-		newStyle.borderRadius = "5px"
-
-	const newProps = {...props}
-	newProps.style = newStyle
-
-	return <div
-		{...newProps}
-	/>
-}
-
-/**
- * Base text field
- *
- * @param props
- * @returns {JSX.Element}
- * @constructor
- */
-function ShTextField(props) {
-	return <TextField
-		{...props}
-		fullWidth
-		className="TextField"
-		variant="outlined"
-	/>
-}
+import { useNavigate } from "react-router-dom";
+import { ShColorButton, ShTextField, ShThemeDiv } from "../ShComponents";
 
 /**
  * A Text entry field for stops which has an edit button.
@@ -155,13 +117,13 @@ function JoinRoom(props) {
 				style={{flex: 2}}
 				size={"small"}
 			/>
-			<ColorButton
+			<ShColorButton
 				variant="contained"
 				className="JoinRoomButton"
 				style={{flex: 1}}
 				sx={{ boxShadow: 0 }} >
 				Join Route
-			</ColorButton>
+			</ShColorButton>
 		</div>
 	</ShThemeDiv>
 }
@@ -266,18 +228,16 @@ class StopList extends Component {
 					gap: "10px",
 					}}>
 				{this.state.stops.length < 7 &&
-					<ColorButton
-						fullWidth
+					<ShColorButton
 						onClick={this.addStop.bind(this)} >
 						Add Stop
-					</ColorButton>
+					</ShColorButton>
 				}
 				{this.state.stops.length > 0 &&
-					<ColorButton
-						fullWidth
+					<ShColorButton
 						onClick={() => { this.props.startRouting(this.state.stops) }} >
 						Start Route
-					</ColorButton>
+					</ShColorButton>
 				}
 				</div>
 			</div>
