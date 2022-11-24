@@ -2,6 +2,7 @@ import {Button, TextField, InputAdornment, IconButton, styled} from "@mui/materi
 import EditIcon from "@mui/icons-material/Edit";
 import { Component } from "react";
 import "./Navhome.css";
+import {useNavigate} from "react-router-dom";
 
 const ColorButton = styled(Button)(({ theme }) => ({
 	color: "#000000",
@@ -217,32 +218,6 @@ class StopList extends Component {
 		this.updateStopLogic(event, index, "Edit", (!this.state.stops[index].Edit))
 	}
 
-	//
-	startRouting() {
-		// console.log(data);
-		// let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
-		// 	method: "POST",
-		// 	headers: {
-		// 		"Content-Type": "application/json",
-		// 		Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
-		// 	},
-		// 	body: JSON.stringify(data),
-		// });
-		// let res = await response.json();
-		// let code = res.RouteCode;
-		// console.log(res);
-		// console.log(code);
-		// if (response.ok) {
-		// 	console.log("everything is good");
-		// 	alert("Routing Began!");
-		// 	navigate("/RouteMenu/" + "a2zXBs");
-		// 	//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
-		// } else {
-		// 	console.log("Something went wrong");
-		// 	console.log("error");
-		// }
-	}
-
 	render() {
 		return <ShThemeDiv>
 			<div style={{
@@ -300,7 +275,7 @@ class StopList extends Component {
 				{this.state.stops.length > 0 &&
 					<ColorButton
 						fullWidth
-						onClick={this.startRouting.bind(this)} >
+						onClick={() => { this.props.startRouting(this.state.stops) }} >
 						Start Route
 					</ColorButton>
 				}
@@ -359,7 +334,7 @@ class StopList extends Component {
 // }
 
 export default function NavigateHome() {
-	// let navigate = useNavigate();
+	let navigate = useNavigate();
 	// const [isPopUp, setPopUp] = useState(false);
 	//
 	// const [data, setData] = useState([
@@ -457,6 +432,35 @@ export default function NavigateHome() {
 	// 	}
 	// }
 
+	/**
+	 * Collect data from the stops and redirect to the navigation page
+	 *
+	 * @returns {Promise<void>}
+	 */
+	async function startRouting(stops) {
+		// Get our stops and strip out unnecessary data
+		const data = [...stops]
+		data.map(stop => { delete stop.Edit })
+
+		let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify(data),
+		});
+
+		let res = await response.json();
+		let code = res.RouteCode;
+
+		if (response.ok) {
+			navigate("/RouteMenu/" + code);
+		} else {
+			alert("Error " + res)
+		}
+	}
+
 	return (
 		<div
 			className={"flex-container"}
@@ -469,7 +473,7 @@ export default function NavigateHome() {
 				marginRight: "auto",
 				marginTop: "10px", }} >
 			<JoinRoom/>
-			<StopList/>
+			<StopList startRouting={startRouting}/>
 		</div>
 	)
 
