@@ -176,6 +176,7 @@ class StopList extends Component {
 		// 	Priority: "0",
 		// 	ArriveBy: "",
 		// 	TaskName: "",
+		//  Edit: false,
 		// }
 
 		this.state = {
