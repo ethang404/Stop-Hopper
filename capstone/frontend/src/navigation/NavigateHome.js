@@ -214,6 +214,32 @@ class StopList extends Component {
 		this.updateStopLogic(event, index, "Edit", (!this.state.stops[index].Edit))
 	}
 
+	//
+	startRouting() {
+		// console.log(data);
+		// let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
+		// 	method: "POST",
+		// 	headers: {
+		// 		"Content-Type": "application/json",
+		// 		Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+		// 	},
+		// 	body: JSON.stringify(data),
+		// });
+		// let res = await response.json();
+		// let code = res.RouteCode;
+		// console.log(res);
+		// console.log(code);
+		// if (response.ok) {
+		// 	console.log("everything is good");
+		// 	alert("Routing Began!");
+		// 	navigate("/RouteMenu/" + "a2zXBs");
+		// 	//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
+		// } else {
+		// 	console.log("Something went wrong");
+		// 	console.log("error");
+		// }
+	}
+
 	render() {
 		return <ShThemeDiv>
 			<div style={{
@@ -255,11 +281,26 @@ class StopList extends Component {
 					</div>
 				}
 				{/* Add Stop Button */}
-				{ this.state.stops.length < 7 &&
-				<div>
-					<Button onClick={this.addStop.bind(this)}>
+				<div style={{
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-evenly",
+					gap: "10px",
+					}}>
+				{this.state.stops.length < 7 &&
+					<ColorButton
+						fullWidth
+						onClick={this.addStop.bind(this)} >
 						Add Stop
-					</Button>
+					</ColorButton>
+				}
+				{this.state.stops.length > 0 &&
+					<ColorButton
+						fullWidth
+						onClick={this.startRouting.bind(this)} >
+						Start Route
+					</ColorButton>
+				}
 				</div>
 				}
 			</div>
