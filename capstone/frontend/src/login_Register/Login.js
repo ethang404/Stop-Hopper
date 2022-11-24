@@ -6,13 +6,11 @@ import Button from '@mui/material/Button';
 import { Component, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
 
-function ShTextField(props) {
-	return <TextField
+function ShTextFieldError(props) {
+	return <ShTextField
 		{...props}
-		fullWidth
-		className="TextField"
-		variant="outlined"
 		error={props.helperText.trim() !== ""}
 	/>
 }
@@ -24,7 +22,7 @@ function ShTextFieldPassword(props) {
 	delete childProps.handleToggle
 	delete childProps.showPassword
 
-	return <ShTextField
+	return <ShTextFieldError
 		{...childProps}
 		type={props.showPassword ? "text" : "password"}
 		autoComplete="current-password"
@@ -179,29 +177,26 @@ export default function Login() {
 
 	return (
 		<form onSubmit={handleSubmit} style={{ margin: "10px" }}>
-			<div style={{
+			<ShThemeDiv style={{
 					display: "flex",
 					flexDirection: "column",
 					justifyContent: "space-evenly",
 					gap: "10px",
-					margin: "auto",
-				 	backgroundColor: "#FFFFFF",
-					borderRadius: "5px", }}
+					margin: "auto", }}
 				 className={"flex-container"} >
-				<div style={{
+				<ShThemeDiv style={{
 						marginTop: "10px",
 						marginLeft: "10px",
 						marginRight: "10px",
 						fontSize: "24px",
-						backgroundColor: "#fc7676",
-						borderRadius: "5px"}}>
+						backgroundColor: "#fc7676" }} >
 					<div style={{margin: "5px"}}>
 						{showRegister && "Stop-Hopper Account Creation"}
 						{!showRegister && "Stop-Hopper Account Login"}
 					</div>
-				</div>
+				</ShThemeDiv>
 				<div style={{marginLeft: "10px", marginRight: "10px"}}>
-					<ShTextField
+					<ShTextFieldError
 						id="username-entry"
 						label="Username"
 						name="username"
@@ -212,7 +207,7 @@ export default function Login() {
 				</div>
 				{ showRegister &&
 					<div style={{marginLeft: "10px", marginRight: "10px"}}>
-						<ShTextField
+						<ShTextFieldError
 							id="email-entry"
 							label="Email"
 							name="email"
@@ -259,18 +254,15 @@ export default function Login() {
 							height: "100%",
 							marginLeft: "10px",
 							marginBottom: "10px"}} >
-						<ColorButton
+						<ShColorButton
 							onClick={handleSubmit}
 							type={"submit"}
-							style={{fontSize: "12pt", color: "#000000"}}
-							sx={{ boxShadow: 0 }}
-							fullWidth
-							variant={"contained"}>
+							style={{fontSize: "12pt", color: "#000000"}} >
 							{showRegister && "Register"}
 							{!showRegister && "Login"}
-						</ColorButton>
+						</ShColorButton>
 					</div>
-					<div style={{
+					<ShThemeDiv style={{
 						display: "flex",
 						flexDirection: "row",
 						justifyContent: "space-evenly",
@@ -279,14 +271,13 @@ export default function Login() {
 						height: "100%",
 						marginRight: "10px",
 						marginBottom: "10px",
-						backgroundColor: "#fc7676",
-						borderRadius: "5px" }}
+						backgroundColor: "#fc7676" }}
 					className={"flex-container"}>
 						<div>REGISTER?</div>
 						<div><Switch checked={showRegister} onChange={handleRegisterSwitch}/></div>
-					</div>
+					</ShThemeDiv>
 				</div>
-			</div>
+			</ShThemeDiv>
 		</form>
 	);
 }
