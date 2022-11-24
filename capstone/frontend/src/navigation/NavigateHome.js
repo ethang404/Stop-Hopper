@@ -86,7 +86,7 @@ function StopEdit(props) {
 	delete childProps.notesValue
 	delete childProps.onChange
 
-	return <ShThemeDiv>
+	return <ShThemeDiv style={{backgroundColor: "#ffdddd"}}>
 		<div
 			{...childProps}
 			style={{
@@ -104,6 +104,7 @@ function StopEdit(props) {
 				gap: "10px", }} >
 				<ShTextField
 					{...childProps}
+					style={{marginTop: "10px"}}
 					type={"number"}
 					label={"Priority"}
 					name={"Priority"}
@@ -117,6 +118,7 @@ function StopEdit(props) {
 				/>
 				<ShTextField
 					{...childProps}
+					style={{marginTop: "10px"}}
 					label={"Arrive By"}
 					name={"ArriveBy"}
 					value={props.arriveValue}
@@ -125,6 +127,7 @@ function StopEdit(props) {
 			</div>
 			<ShTextField
 				{...childProps}
+				style={{marginBottom: "10px"}}
 				label={"Notes"}
 				name={"TaskName"}
 				value={props.notesValue}
@@ -302,7 +305,6 @@ class StopList extends Component {
 					</ColorButton>
 				}
 				</div>
-				}
 			</div>
 		</ShThemeDiv>
 	}
