@@ -105,10 +105,15 @@ function StopEdit(props) {
 				<ShTextField
 					{...childProps}
 					type={"number"}
-					label={"Priority (1-7)"}
+					label={"Priority"}
 					name={"Priority"}
 					value={props.priorityValue}
-					onChange={props.onChange}
+					onChange={(e) => {
+						console.log(e.target.value)
+						if (e.target.value >= -3 && e.target.value <= 3) {
+							return props.onChange(e)
+						}
+					}}
 				/>
 				<ShTextField
 					{...childProps}
@@ -168,7 +173,7 @@ class StopList extends Component {
 		// Stops is a list (?) instead of dict, so we can have .length
 		// {
 		// 	Stop: "",
-		// 	Priority: "1",
+		// 	Priority: "0",
 		// 	ArriveBy: "",
 		// 	TaskName: "",
 		// }
@@ -186,7 +191,7 @@ class StopList extends Component {
 		const newStops = [...this.state.stops]
 		newStops.push({
 			Stop: "",
-			Priority: "1",
+			Priority: "0",
 			ArriveBy: "",
 			TaskName: "",
 			Edit: false
