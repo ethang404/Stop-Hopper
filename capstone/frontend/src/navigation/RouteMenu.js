@@ -56,7 +56,7 @@ export default function RouteMenu() {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
-			body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
+			body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
 		});
 		let data = await resp.json();
 		setStopOrder(data);
@@ -66,7 +66,7 @@ export default function RouteMenu() {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
-				routeCode: "a2zXBs",
+				routeCode: code,
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
 		});
@@ -108,7 +108,7 @@ export default function RouteMenu() {
 					"Content-Type": "application/json",
 					Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 				},
-				body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
+				body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
 			});
 			console.log(resp.JSON);
 			navigate("/");
@@ -218,12 +218,12 @@ export default function RouteMenu() {
 					))}
 				</div>
 				<section className="AddTask">
-					<div class="dropdown">
-						<div class="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+					<div className="dropdown">
+						<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
 							{selected}
 						</div>
 						{isActive ? (
-							<div class="dropdown-content">
+							<div className="dropdown-content">
 								{tasks.map((task) => (
 									<div
 										key={task.id}

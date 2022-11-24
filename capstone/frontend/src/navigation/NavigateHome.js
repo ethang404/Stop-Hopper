@@ -2,13 +2,13 @@ import { Button, TextField, Fab } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import "./Navhome.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
 	const [favRoutes, setFavRoutes] = useState([]);
-
+	
 	const [data, setData] = useState([
 		{
 			Stop: "",
@@ -88,7 +88,6 @@ export default function NavigateHome() {
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
-				routeCode: "a2zXBs",
 			},
 		});
 		let data = await resp.json();
@@ -112,7 +111,7 @@ export default function NavigateHome() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu/" + "a2zXBs");
+			navigate("/RouteMenu/" + code);
 			//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
 		} else {
 			console.log("Something went wrong");
