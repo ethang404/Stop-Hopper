@@ -223,35 +223,37 @@ class StopList extends Component {
 				justifyContent: "space-evenly",
 				gap: "10px", }} >
 				{/* List Stops */}
-				<div style={{
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "space-evenly",
-					gap: "10px", }} >
-				{
-					this.state.stops.map((curVal, index, arr) => {
-						return <div key={index}>
-							<StopEntryField
-								id={index.toString()}
-								label={"Stop #" + (index + 1).toString()}
-								name={"Stop"}
-								value={this.state.stops[index].Stop}
-								onChange={this.updateStop.bind(this)}
-								editStop={(e) => this.toggleEdit.bind(this)(e, index)}
-							/>
-							{ this.state.stops[index].Edit &&
-								<StopEdit
+				{this.state.stops.length > 0 &&
+					<div style={{
+						display: "flex",
+						flexDirection: "column",
+						justifyContent: "space-evenly",
+						gap: "10px",
+						}}>
+						{this.state.stops.map((curVal, index, arr) => {
+							return <div key={index}>
+								<StopEntryField
 									id={index.toString()}
-									priorityValue={this.state.stops[index].Priority}
-									arriveValue={this.state.stops[index].ArriveBy}
-									notesValue={this.state.stops[index].TaskName}
+									label={"Stop #" + (index + 1).toString()}
+									name={"Stop"}
+									value={this.state.stops[index].Stop}
 									onChange={this.updateStop.bind(this)}
+									editStop={(e) => this.toggleEdit.bind(this)(e, index)}
 								/>
-							}
-						</div>
-					})
+								{this.state.stops[index].Edit &&
+									<StopEdit
+										id={index.toString()}
+										priorityValue={this.state.stops[index].Priority}
+										arriveValue={this.state.stops[index].ArriveBy}
+										notesValue={this.state.stops[index].TaskName}
+										onChange={this.updateStop.bind(this)}
+									/>
+								}
+							</div>
+						})
+						}
+					</div>
 				}
-				</div>
 				{/* Add Stop Button */}
 				{ this.state.stops.length < 7 &&
 				<div>
