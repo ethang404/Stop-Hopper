@@ -2,12 +2,13 @@ import { Button, TextField, Fab } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import { useEffect, useState } from "react";
 import "./Navhome.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
-
+	const [favRoutes, setFavRoutes] = useState([]);
+	
 	const [data, setData] = useState([
 		{
 			Stop: "",
@@ -78,6 +79,21 @@ export default function NavigateHome() {
 		setData(newArr);
 	}
 
+	useEffect(() => {
+		getFavRoutes();
+	}, []);
+	async function getFavRoutes() {
+		let resp = await fetch("http://127.0.0.1:8000/api/getRoutes/", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+		});
+		let data = await resp.json();
+		console.log(data);
+		setFavRoutes(data);
+	}
 	async function handleSubmit() {
 		console.log(data);
 		let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
@@ -95,15 +111,22 @@ export default function NavigateHome() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu/" + code); //make dynamic later
+			navigate("/RouteMenu/" + code);
+			//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
 		}
 	}
-
+	//map fav routes
 	return (
 		<div className="Container">
+			<h2>List of Favorited Routes: </h2>
+			{favRoutes.map((route) => (
+				<div key={route.id} onClick={() => navigate("/RouteMenu/" + route.routeCode)}>
+					<h3>{route.routeCode}</h3>
+				</div>
+			))}
 			<section className="StartNav">
 				<section className="NavigationFields">
 					<section className="inputGroup">
@@ -133,7 +156,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -180,7 +203,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -227,7 +250,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -274,7 +297,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -321,7 +344,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -368,7 +391,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -415,7 +438,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"

@@ -103,26 +103,43 @@ def getTasks(request):
     rCode = request.headers['routeCode']
     routeId = Route.objects.get(routeCode=rCode)
     stops = Stops.objects.filter(route_id_id=routeId.id)
+
+    #structure should be data[{Stop:"Target"}, TaskInfo:[{"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id}]]
     
-    for stop in stops:
+    for i,stop in enumerate(stops):
         try:
             print(stop.id, stop.stopAddress, stop.route_id_id)
             tasks = Tasks.objects.filter(stopId_id = stop.id)
-            for index, task in enumerate(tasks):
-                print(task.taskName, task.stopId.id)
-                data.append({"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id})
+            data.append({"Stop":stop.stopAddress,"TaskInfo":[]})
+            for index, task in enumerate(tasks): #if a stop has no tasks this wont run since its empty
+                #print(task.taskName, task.stopId.id)
+                #data.append({"Stop":stop.stopAddress,"TaskInfo":{"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id}})
+                data[i]["TaskInfo"].append({"id":task.id,"taskName":task.taskName,"stopId":task.stopId.id})
+                print(data)
+                print("\n")
         except:
             print("error", stop.stopAddress)
+            
             continue
     return Response(data)
     
-@permission_classes((IsAuthenticated,)) #this checks if the user is valid
+#@permission_classes((IsAuthenticated,)) #this checks if the user is valid
+@api_view(['GET'])
 def hello_world(request):
-    tokenResult = JWTAuthentication().authenticate(request) #this checks if the provided token(in header) is valid
-    if tokenResult:
-        return HttpResponse("return this string")
-    else:
-        return HttpResponse("Invalid Token")
+    routeCode = "u5WbrD"
+    routeId = Route.objects.get(routeCode=routeCode)
+    stops = Stops.objects.filter(route_id_id=routeId.id)
+    preferences = Preferences.objects.get(stop_id=stops[0].id)
+    #data = []
+    val = PreferencesSerializer(preferences)
+    #data.append(preferences)
+    return Response(val.data)
+
+    #tokenResult = JWTAuthentication().authenticate(request) #this checks if the provided token(in header) is valid
+    #if tokenResult:
+        #return HttpResponse("return this string")
+    #else:
+        #return HttpResponse("Invalid Token")
 
 @api_view(['POST'])
 def calculateRoute(request):
@@ -175,10 +192,42 @@ def calculateRoute(request):
     return Response(myData)
     #serializer = StopsSerializer(stops, many=True)
     #data = serializer.data
+    
     #print(data)
     #return Response(serializer.data)
 
     return Response("Calculated Route", status=status.HTTP_200_OK)
+@api_view(['GET'])
+def getRoutes(request):
+    token = request.headers['Authorization'].split(' ')[1]
+    #routeCode = request.headers['routeCode']
+    token = jwt.decode(token, env('SECRET_KEY'), algorithms=["HS256"])
+    print(token)
+    print(token['user_id'])
+
+    data = []
+    routes = Route.objects.filter(user_id_id=token['user_id'])
+    counter = 0
+    for route in routes:
+        if counter < 10:
+            data.append({"id":route.id,"routeCode":route.routeCode,"user_id":route.user_id_id})
+            counter += 1
+        else:
+            return Response(data, status=status.HTTP_200_OK)
+    return Response(data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def deleteRoute(request):
+    try:
+        routeCode = request.data['RouteCode']
+
+        route = Route.objects.get(routeCode=routeCode)
+        route.delete()
+        return Response({'Status':status.HTTP_201_CREATED,"Result":"Route deleted"})
+    except:
+        return Response({'Status':status.HTTP_204_NO_CONTENT,"Result":"Failure to delete Route"})
+
+
 
 
 @api_view(['POST'])
