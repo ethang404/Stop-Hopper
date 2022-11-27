@@ -14,8 +14,18 @@ const ColorButton = styled(Button)(({ theme }) => ({
  * @returns {JSX.Element}
  * @constructor
  */
+export function ShColorButtonNoFullWidth(props) {
+    return <ColorButton {...props} sx={{ boxShadow: 0 }} />
+}
+
+/**
+ * Themed button with red colors for hover and click, shadow removed from default state, still present on hover.
+ * @param props
+ * @returns {JSX.Element}
+ * @constructor
+ */
 export function ShColorButton(props) {
-    return <ColorButton {...props} fullWidth sx={{ boxShadow: 0 }} />
+    return <ShColorButtonNoFullWidth {...props} fullWidth />
 }
 
 /**
