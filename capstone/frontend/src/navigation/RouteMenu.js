@@ -157,6 +157,25 @@ export default function RouteMenu() {
 			alert("couldnt delete task");
 		}
 	}
+	async function deleteStop(stopName) {
+		let resp = await fetch("http://127.0.0.1:8000/api/deleteStop/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({
+				routeCode: code,
+				stopName: stopName,
+			}),
+		});
+
+		if (resp.status == "200") {
+			alert("Stop Removed");
+		} else {
+			alert("couldnt delete stop");
+		}
+	}
 
 	async function addStop() {
 		console.log(newStop.routeCode);
@@ -204,7 +223,13 @@ export default function RouteMenu() {
 								setIsActive(false);
 							}}
 						>
-							<h3>{task.Stop}</h3>
+							<h3
+								onClick={() => {
+									deleteStop(task.Stop);
+								}}
+							>
+								{task.Stop}
+							</h3>
 							{task.TaskInfo.map((taskInfo) => (
 								<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
 									<div>id: {taskInfo.id}</div>
