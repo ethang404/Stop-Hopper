@@ -9,7 +9,7 @@ import {
 } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import StarsIcon from '@mui/icons-material/Stars';
+import StarsIcon from "@mui/icons-material/Stars";
 import { Fab, Button, TextField } from "@mui/material";
 
 export default function RouteMenu() {
@@ -25,7 +25,7 @@ export default function RouteMenu() {
 	const [isActive, setIsActive] = useState(false);
 	const [selected, setSelected] = useState("Pick a Stop");
 	const [taskInput, setTaskInput] = useState("");
-	const [isFavorite,setFavorite] = useState(false)
+	const [isFavorite, setFavorite] = useState(false);
 
 	const [newTask, setNewTask] = useState({
 		RouteCode: code,
@@ -50,13 +50,13 @@ export default function RouteMenu() {
 		getRoute();
 	}, []);
 	async function getRoute() {
-		let resp = await fetch("http://127.0.0.1:8000/api/getRoute/", {
+		let resp = await fetch("http://127.0.0.1:8000/api/calculateRoute/", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
-			body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
+			body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
 		});
 		let data = await resp.json();
 		setStopOrder(data);
@@ -66,7 +66,7 @@ export default function RouteMenu() {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
-				routeCode: "a2zXBs",
+				routeCode: code,
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
 		});
@@ -75,37 +75,42 @@ export default function RouteMenu() {
 		setTasks(data);
 	}
 	async function calculateRoute() {
+		console.log(stopOrder.length);
+		console.log(index);
+		if (index >= stopOrder.length) {
+			alert("Finished Route");
+		}
 		// eslint-disable-next-line no-undef
 		const directionsService = new google.maps.DirectionsService();
+
 		console.log("this is my testin calculate route calls");
-
-		//console.log(data);
-		//console.log(stopOrder);
-
+		console.log(directions);
 		const routing = await directionsService.route(stopOrder[index]);
+
 		//make call to backend to retrieve order of stops. [{orgin:stop1,destination;stop2}, {origin:stop2, destiation: stop3}]
 		if (routing.status == "OK") {
 			console.log("routing started");
+
 			setDirections(routing);
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
 		}
 	}
-	async function logout(){
-		if(isFavorite){
+	async function logout() {
+		if (isFavorite) {
 			navigate("/");
-		}
-		else{//if user not favorited the stop-remove from databse-redirect to home after
+		} else {
+			//if user not favorited the stop-remove from databse-redirect to home after
 			let resp = await fetch("http://127.0.0.1:8000/api/deleteRoute/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
-			},
-			body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
-		});
-		console.log(resp.JSON)
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+				},
+				body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
+			});
+			console.log(resp.JSON);
 			navigate("/");
 		}
 	}
@@ -136,9 +141,43 @@ export default function RouteMenu() {
 		console.log(data);
 	}
 
-	async function addStop() {
-		//make obj
+	async function deleteTask(taskId) {
+		let resp = await fetch("http://127.0.0.1:8000/api/deleteTask/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({ id: taskId }),
+		});
 
+		if (resp.status == "200") {
+			alert("task completed");
+		} else {
+			alert("couldnt delete task");
+		}
+	}
+	async function deleteStop(stopName) {
+		let resp = await fetch("http://127.0.0.1:8000/api/deleteStop/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({
+				routeCode: code,
+				stopName: stopName,
+			}),
+		});
+
+		if (resp.status == "200") {
+			alert("Stop Removed");
+		} else {
+			alert("couldnt delete stop");
+		}
+	}
+
+	async function addStop() {
 		console.log(newStop.routeCode);
 		let resp = await fetch("http://127.0.0.1:8000/api/addStop/", {
 			method: "POST",
@@ -159,7 +198,7 @@ export default function RouteMenu() {
 			setCurrentLocation({ currentLocation: pos });
 		});
 	};*/
-	
+
 	return (
 		<div>
 			<div className="mainMenu">
@@ -184,9 +223,15 @@ export default function RouteMenu() {
 								setIsActive(false);
 							}}
 						>
-							<h3>{task.Stop}</h3>
+							<h3
+								onClick={() => {
+									deleteStop(task.Stop);
+								}}
+							>
+								{task.Stop}
+							</h3>
 							{task.TaskInfo.map((taskInfo) => (
-								<div key={taskInfo.id}>
+								<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
 									<div>id: {taskInfo.id}</div>
 									<div>taskName: {taskInfo.taskName}</div>
 									<div>stopId: {taskInfo.stopId}</div>
@@ -196,14 +241,15 @@ export default function RouteMenu() {
 					))}
 				</div>
 				<section className="AddTask">
-					<div class="dropdown">
-						<div class="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+					<div className="dropdown">
+						<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
 							{selected}
 						</div>
 						{isActive ? (
-							<div class="dropdown-content">
+							<div className="dropdown-content">
 								{tasks.map((task) => (
 									<div
+										key={task.id}
 										onClick={(e) => {
 											setIsActive(false);
 											setSelected(task.Stop);
@@ -247,8 +293,13 @@ export default function RouteMenu() {
 					</Button>
 				</section>
 			</div>
-			<Fab size="small" className="detailButton" aria-label="edit" onClick={() => setFavorite(true)}>
-				<StarsIcon/>
+			<Fab
+				size="small"
+				className="detailButton"
+				aria-label="edit"
+				onClick={() => setFavorite(true)}
+			>
+				<StarsIcon />
 			</Fab>
 			{JSON.stringify(isFavorite)}
 			<Button onClick={logout}>Logout</Button>
