@@ -1,6 +1,6 @@
 import { InputAdornment, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import { Component } from "react";
+import {Component, useState} from "react";
 import "./Navhome.css";
 import { useNavigate } from "react-router-dom";
 import { ShColorButton, ShTextField, ShThemeDiv } from "../ShComponents";
@@ -100,10 +100,24 @@ function StopEdit(props) {
 	</ShThemeDiv>
 }
 
+/**
+ * A component that has a TextField and Button to enter a route code and join it on click.
+ *
+ * @param props the properties that will be applied to the top level element
+ * @param props.routeCodeValue the value of the TextField for the route code
+ * @param props.routeCodeOnChange the action to take when the TextField is updated
+ * @param props.joinRouteOnClick the action to take when the Button is clicked
+ * @returns {JSX.Element}
+ */
 function JoinRoom(props) {
+	const childProps = {...props}
+	delete childProps.routeCodeValue
+	delete childProps.routeCodeOnChange
+	delete childProps.joinRouteOnClick
+
 	return <ShThemeDiv>
 		<div
-			{...props}
+			{...childProps}
 			style={{
 				margin: "10px",
 				display: "flex",
@@ -116,12 +130,16 @@ function JoinRoom(props) {
 				variant="standard"
 				style={{flex: 2}}
 				size={"small"}
+				value={props.routeCodeValue}
+				onChange={props.routeCodeOnChange}
 			/>
 			<ShColorButton
 				variant="contained"
 				className="JoinRoomButton"
 				style={{flex: 1}}
-				sx={{ boxShadow: 0 }} >
+				sx={{boxShadow: 0}}
+				onClick={props.joinRouteOnClick}
+				>
 				Join Route
 			</ShColorButton>
 		</div>
@@ -248,6 +266,8 @@ class StopList extends Component {
 export default function NavigateHome() {
 	let navigate = useNavigate();
 
+	const [joinCode, setJoinCode] = useState('')
+
 	/**
 	 * Collect data from the stops and redirect to the navigation page
 	 *
@@ -288,8 +308,14 @@ export default function NavigateHome() {
 				marginLeft: "auto",
 				marginRight: "auto",
 				marginTop: "10px", }} >
-			<JoinRoom/>
-			<StopList startRouting={startRouting}/>
+			<JoinRoom
+				routeCodeValue={joinCode}
+				routeCodeOnChange={(e) => setJoinCode(e.target.value)}
+				joinRouteOnClick={() => navigate('/Home/' + joinCode)}
+			/>
+			<StopList
+				startRouting={startRouting}
+			/>
 		</div>
 	)
 }
