@@ -9,6 +9,20 @@ export default function Room() {
     const { code } = useParams(); 
     let navigate = useNavigate();     
 
+    const [selected, setSelected] = useState("Pick a Stop");
+    const [isActive, setIsActive] = useState(false);
+    const [taskInput, setTaskInput] = useState("");
+
+    const [newStop, setNewStop] = useState({
+		routeCode: code,
+		stopAddress: "", //should be a address for now
+	});
+    const [newTask, setNewTask] = useState({
+		RouteCode: code,
+		stopAddress: "Pick a Stop2",
+		taskName: "",
+	});
+
     const [detail, setDetail] = useState({ driver: "", viewer: ""});
     const [authTokens, setAuthTokens] = useState([]);
     const [isPopUp, setPopUp] = useState(false);
@@ -62,6 +76,59 @@ export default function Room() {
     async function handleSubmit(){
         navigate('/Home')
     }
+
+    async function deleteTask(taskId) {
+		let resp = await fetch("http://127.0.0.1:8000/api/deleteTask/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({ id: taskId }),
+		});
+
+		if (resp.status == "200") {
+			alert("task completed");
+		} else {
+			alert("couldnt delete task");
+		}
+	}
+
+    async function addTask() {
+		//make obj
+		var temp = {
+			RouteCode: code,
+			stopAddress: selected,
+			taskName: taskInput,
+		};
+		console.log(newTask.RouteCode);
+		let resp = await fetch("http://127.0.0.1:8000/api/addTask/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify(temp),
+		});
+		console.log(temp);
+		let data = await resp.json();
+		console.log(data);
+	}
+
+    async function addStop() {
+		console.log(newStop.routeCode);
+		let resp = await fetch("http://127.0.0.1:8000/api/addStop/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify(newStop),
+		});
+		console.log(newStop);
+		let data = await resp.json();
+		console.log(data);
+	}
 
     function popUp(e) {
 		if (isPopUp) {
@@ -119,56 +186,79 @@ export default function Room() {
         <div class="sized" border="black">
             Route Code: {code}
         </div>
-        <br /> 
         <br />
-        <div class="sized">
-            <select>
-                <option value="">--Please choose an Stop--</option>
-
-                {tasks.map((task) => (
-                    <option value={task.Stop}>{task.Stop}</option>
-                ))}
-            </select>
-            <section>
-                <Fab size="small" className="detailButton" aria-label="edit" onClick={popUp}>
-                    <EditIcon />
-                </Fab>
-                {isPopUp ? (
-                    <div className="Popup">
-                        <TextField
-                            id="outlined-number"
-                            type="number"
-                            className="TextField"
-                            label="Priority(1-7): "
-                            name="Priority"
-                            value={data[3].Priority}
-                            onChange={(e) => handleChange(e, 3)}
-                        />
-                        <TextField
-                            id="filled-basic"
-                            className="TextField"
-                            label="Arrive By(what time to arrive at stop): "
-                            helperText="What time to arrive at stop by"
-                            name="ArriveBy"
-                            variant="filled"
-                            value={data[3].ArriveBy}
-                            onChange={(e) => handleChange(e, 3)}
-                        />
-                        <TextField
-                            id="filled-basic"
-                            className="TextField"
-                            label="TaskName"
-                            helperText="What todo"
-                            name="TaskName"
-                            variant="filled"
-                            value={data[3].TaskName}
-                            onChange={(e) => handleChange(e, 3)}
-                        />
-                    </div>
-                ) : null}
-            </section>
+        <div>
+            {tasks.map((task) => (
+                <div
+                    key={task.id}
+                    onClick={(e) => {
+                        setSelected(task.Stop);
+                        setIsActive(false);
+                    }}
+                >
+                    <h3>{task.Stop}</h3>
+                    {task.TaskInfo.map((taskInfo) => (
+                        <div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
+                            <div>id: {taskInfo.id}</div>
+                            <div>taskName: {taskInfo.taskName}</div>
+                            <div>stopId: {taskInfo.stopId}</div>
+                        </div>
+                    ))}
+                </div>
+            ))}
         </div>
-        <br />
+        <section className="AddTask">
+            <div className="dropdown">
+                <div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+                    {selected}
+                </div>
+                {isActive ? (
+                    <div className="dropdown-content">
+                        {tasks.map((task) => (
+                            <div
+                                key={task.id}
+                                onClick={(e) => {
+                                    setIsActive(false);
+                                    setSelected(task.Stop);
+                                }}
+                            >
+                                {task.Stop}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    ""
+                )}
+            </div>
+
+            <TextField
+                id="filled-basic"
+                className="TaskTextField"
+                label="Add a Task"
+                name="taskInput"
+                variant="filled"
+                value={taskInput}
+                onChange={(e) => setTaskInput(e.target.value)}
+            />
+            <Button className="TaskButton" onClick={addTask}>
+                Click here to add a task
+            </Button>
+        </section>
+
+        <section className="AddStop">
+            <TextField
+                id="filled-basic"
+                className="StopTextField"
+                label="Add a Stop"
+                name="newStop.stopAddress"
+                variant="filled"
+                value={newStop.stopAddress}
+                onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
+            />
+            <Button className="StopButton" onClick={addStop}>
+                Click here to add a Stop to your route
+            </Button>
+        </section>
         <br />
         <div>
             <Button onClick={handleSubmit}>Leave Route</Button>
