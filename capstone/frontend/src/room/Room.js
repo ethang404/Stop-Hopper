@@ -2,151 +2,269 @@ import './Room.css';
 import React, { Component } from 'react';
 import { useEffect, useState } from "react";
 import { Button, TextField, Fab } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import EditIcon from "@mui/icons-material/Edit";
 
 export default function Room() {    
-    let navigate = useNavigate(); 
+    const { code } = useParams(); 
+    let navigate = useNavigate();     
+
+    const [selected, setSelected] = useState("Pick a Stop");
+    const [isActive, setIsActive] = useState(false);
+    const [taskInput, setTaskInput] = useState("");
+
+    const [newStop, setNewStop] = useState({
+		routeCode: code,
+		stopAddress: "", //should be a address for now
+	});
+    const [newTask, setNewTask] = useState({
+		RouteCode: code,
+		stopAddress: "Pick a Stop2",
+		taskName: "",
+	});
+
     const [detail, setDetail] = useState({ driver: "", viewer: ""});
     const [authTokens, setAuthTokens] = useState([]);
-    async function handleSubmit() {
-        let response = await fetch("http://127.0.0.1:8000/api/token/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(detail),
-        });
-        let data = await response.json();
-
-        console.log(data.access);
-        console.log(data.refresh);
-        if (response.status === 200) {
-            setAuthTokens(data);
-            localStorage.setItem("accessToken", JSON.stringify(data.access));
-            localStorage.setItem("refreshToken", JSON.stringify(data.refresh));
-            navigate("/Home");
-        } else {
-            alert("Error with Credentials!");
-        }
+    const [isPopUp, setPopUp] = useState(false);
+    const [tasks, setTasks] = useState([]);
+    const [stops, setStops] = useState([]); 
+    const [data, setData] = useState([
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+		{
+			Stop: "",
+			Priority: null,
+			ArriveBy: "",
+			TaskName: "",
+		},
+	]);
+    
+    async function handleSubmit(){
+        navigate('/Home')
     }
+
+    async function deleteTask(taskId) {
+		let resp = await fetch("http://127.0.0.1:8000/api/deleteTask/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({ id: taskId }),
+		});
+
+		if (resp.status == "200") {
+			alert("task completed");
+		} else {
+			alert("couldnt delete task");
+		}
+	}
+
+    async function addTask() {
+		//make obj
+		var temp = {
+			RouteCode: code,
+			stopAddress: selected,
+			taskName: taskInput,
+		};
+		console.log(newTask.RouteCode);
+		let resp = await fetch("http://127.0.0.1:8000/api/addTask/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify(temp),
+		});
+		console.log(temp);
+		let data = await resp.json();
+		console.log(data);
+	}
+
+    async function addStop() {
+		console.log(newStop.routeCode);
+		let resp = await fetch("http://127.0.0.1:8000/api/addStop/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify(newStop),
+		});
+		console.log(newStop);
+		let data = await resp.json();
+		console.log(data);
+	}
+
+    function popUp(e) {
+		if (isPopUp) {
+			setPopUp(false);
+			console.log(isPopUp);
+		} else {
+			setPopUp(true);
+			console.log(isPopUp);
+		}
+	}
+
+    useEffect(() => {
+        getTasks();
+        //addTask();
+        //addStop();
+    }, [] )
+
+    async function getTasks() {
+		let resp = await fetch("http://127.0.0.1:8000/api/getTasks/", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				routeCode: code,
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+		});
+		let data = await resp.json();
+		console.log(data);
+		setTasks(data);
+	}
+
+	function handleChange(e, index) {
+		console.log("index: " + index);
+		console.log("property name: " + e.target.name);
+		let newArr = [...data]; // copying the old datas array
+		// a deep copy is not needed as we are overriding the whole object below, and not setting a property of it. this does not mutate the state.
+		if (e.target.name === "Stop") {
+			newArr[index].Stop = e.target.value;
+		} else if (e.target.name === "Priority") {
+			newArr[index].Priority = e.target.value;
+		} else if (e.target.name === "ArriveBy") {
+			newArr[index].ArriveBy = e.target.value;
+		} else if (e.target.name === "TaskName") {
+			newArr[index].TaskName = e.target.value;
+		}
+		setData(newArr);
+	}
+
     return (
-    <>
+    <div>
         <div class="sized">
-            <h1> Routing Room</h1>
+            <h1> Routing Room </h1>
         </div>
         <br />
         <div class="sized" border="black">
-            <body>
-            Route Code: 123455
-            </body>
+            Route Code: {code}
         </div>
         <br />
-        <div class="boxed">
-            <strong> Sheila at: Stop #1 </strong>
+        <div>
+            {tasks.map((task) => (
+                <div
+                    key={task.id}
+                    onClick={(e) => {
+                        setSelected(task.Stop);
+                        setIsActive(false);
+                    }}
+                >
+                    <h3>{task.Stop}</h3>
+                    {task.TaskInfo.map((taskInfo) => (
+                        <div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
+                            <div>id: {taskInfo.id}</div>
+                            <div>taskName: {taskInfo.taskName}</div>
+                            <div>stopId: {taskInfo.stopId}</div>
+                        </div>
+                    ))}
+                </div>
+            ))}
         </div>
-        <br />
-        <div class="boxed">
-            <strong> Going to: Stop #2 </strong>
-        </div>
-        <br /> 
-        <div class="sized">
-            <form action="/action.php" method="post">Stop: <input name="stop" type="text" /> 
-                <br /> 
-                <textarea cols="20" name="comments" rows="5">Add items</textarea>
-                <br /> <input type="submit" value="Submit" />
-            </form>
-        </div>
-        <br />
-        <div class="sized">
-            <form action="/action.php" method="post"> Search stop:
-                <select name="Stop 1">
-                    <option selected="selected" value="stop">Stop 1</option>
-                    <option value="stop">Stop 2</option>
-                    <option value="stop">Stop 3</option>
-                    <option value="stop">Stop 4</option>
-                    <option value="stop">Stop 5</option>
-                    <option value="stop">Stop 6</option>
-                    <option value="stop">Stop 7</option>
-                </select> 
-                <br /> 
-                <textarea cols="20" name="comments" rows="5">Add items</textarea> 
-                <br /> 
-                <input type="submit" value="Submit"/>
-        </form>
-        </div>
-        <br />
-        <div class="tabled">
-            <table>
-                <tr>
-                    <th> Stop 1: Item List</th>
-                </tr>
-                <tr class="indented">
-                    milk
-                </tr>
-                <tr class="indented">
-                    eggs
-                </tr>
-                <tr>
-                    <th> Stop 2: Item List</th>
-                </tr>
-                <tr class="indented">
-                    pick up Emily
-                </tr>
-                <tr>
-                    <th> Stop 3: Item List</th>
-                </tr>
-                <tr class="indented">
-                    coffee
-                </tr>
-                <tr>
-                    <th> Stop 4: Item List</th>
-                </tr>
-                <tr class="indented">
-                    dress fitting
-                </tr>
-                <tr class="indented">
-                    pick up hair piece
-                </tr>
-                <tr>
-                    <th> Stop 5: Item List</th>
-                </tr>
-                <tr class="indented">
-                    rice
-                </tr>
-                <tr class="indented">
-                    tomato sauce
-                </tr>
-                <tr class="indented">
-                    hot dogs
-                </tr>
-                <tr class="indented">
-                    tortillas
-                </tr>
-                <tr>
-                    <th> Stop  6: Item List</th>
-                </tr>
-                <tr class="indented">
-                    pizza
-                </tr>
-                <tr>
-                    <th> Stop 7: Item List</th>
-                </tr>
-                <tr class="indented">
-                    pick up FedEx
-                </tr>
-            </table>                
-        </div>
-        <br />
-        <div class="boxed">
-            <white>
-                <strong>Leave Route</strong>
-            </white>
-        </div>
-        <br />
+        <section className="AddTask">
+            <div className="dropdown">
+                <div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+                    {selected}
+                </div>
+                {isActive ? (
+                    <div className="dropdown-content">
+                        {tasks.map((task) => (
+                            <div
+                                key={task.id}
+                                onClick={(e) => {
+                                    setIsActive(false);
+                                    setSelected(task.Stop);
+                                }}
+                            >
+                                {task.Stop}
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    ""
+                )}
+            </div>
+
+            <TextField
+                id="filled-basic"
+                className="TaskTextField"
+                label="Add a Task"
+                name="taskInput"
+                variant="filled"
+                value={taskInput}
+                onChange={(e) => setTaskInput(e.target.value)}
+            />
+            <Button className="TaskButton" onClick={addTask}>
+                Click here to add a task
+            </Button>
+        </section>
+
+        <section className="AddStop">
+            <TextField
+                id="filled-basic"
+                className="StopTextField"
+                label="Add a Stop"
+                name="newStop.stopAddress"
+                variant="filled"
+                value={newStop.stopAddress}
+                onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
+            />
+            <Button className="StopButton" onClick={addStop}>
+                Click here to add a Stop to your route
+            </Button>
+        </section>
         <br />
         <div>
             <Button onClick={handleSubmit}>Leave Route</Button>
         </div>
-    </>
+        <br/>
+        <br/>
+    </div>
     )
 }
