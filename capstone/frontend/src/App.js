@@ -17,7 +17,7 @@ function App() {
 					<Route element={<PrivateRoute />}>
 						<Route path="/Home" element={<NavigateHome />}></Route>
 						<Route path="/RouteMenu/:code" element={<RouteMenu />}></Route>
-						<Route path="/Room/" element={<Room />}></Route>
+						<Route path="/Room/:code" element={<Room />}></Route>
 					</Route>
 				</Routes>
 			</Router>

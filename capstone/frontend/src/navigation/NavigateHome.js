@@ -7,8 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
-	const [favRoutes, setFavRoutes] = useState([]);
-	
+	const [code,setCode] = useState("")	
+	const [favRoutes, setFavRoutes] = useState([]);	
 	const [data, setData] = useState([
 		{
 			Stop: "",
@@ -156,7 +156,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -203,7 +203,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -250,7 +250,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -297,7 +297,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -344,7 +344,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -391,7 +391,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -438,7 +438,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By: "
+									label="Arrive By(what time to arrive at stop): "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
@@ -470,8 +470,8 @@ export default function NavigateHome() {
 			</section>
 			<h3>--Or--</h3>
 			<section className="JoinRoom">
-				<TextField id="standard-basic" label="RoomCode" variant="standard" />
-				<Button variant="outlined" color="error" className="JoinRoomButton">
+				<TextField id="standard-basic" label="RoomCode" variant="standard" value = {code} onChange={(e) => setCode(e.target.value)}/>
+				<Button variant="outlined" color="error" className="JoinRoomButton" onClick={() => navigate('/Room/'+code)}>
 					Join Route Room
 				</Button>
 			</section>
