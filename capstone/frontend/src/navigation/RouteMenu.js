@@ -39,7 +39,7 @@ export default function RouteMenu() {
 
 	useEffect(() => {
 		//anytime we move stops(click button to inc index), we display new route directions
-		setDirections(null);
+
 		calculateRoute();
 		console.log(stopOrder);
 	}, [index]); //replace with index
@@ -159,8 +159,6 @@ export default function RouteMenu() {
 	}
 
 	async function addStop() {
-		//make obj
-
 		console.log(newStop.routeCode);
 		let resp = await fetch("http://127.0.0.1:8000/api/addStop/", {
 			method: "POST",
