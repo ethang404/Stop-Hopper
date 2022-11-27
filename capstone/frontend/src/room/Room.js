@@ -1,34 +1,34 @@
-import './Room.css';
-import React, { Component } from 'react';
+import "./Room.css";
+import React, { Component } from "react";
 import { useEffect, useState } from "react";
 import { Button, TextField, Fab } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
 
-export default function Room() {    
-    const { code } = useParams(); 
-    let navigate = useNavigate();     
+export default function Room() {
+	const { code } = useParams();
+	let navigate = useNavigate();
 
-    const [selected, setSelected] = useState("Pick a Stop");
-    const [isActive, setIsActive] = useState(false);
-    const [taskInput, setTaskInput] = useState("");
+	const [selected, setSelected] = useState("Pick a Stop");
+	const [isActive, setIsActive] = useState(false);
+	const [taskInput, setTaskInput] = useState("");
 
-    const [newStop, setNewStop] = useState({
+	const [newStop, setNewStop] = useState({
 		routeCode: code,
 		stopAddress: "", //should be a address for now
 	});
-    const [newTask, setNewTask] = useState({
+	const [newTask, setNewTask] = useState({
 		RouteCode: code,
 		stopAddress: "Pick a Stop2",
 		taskName: "",
 	});
 
-    const [detail, setDetail] = useState({ driver: "", viewer: ""});
-    const [authTokens, setAuthTokens] = useState([]);
-    const [isPopUp, setPopUp] = useState(false);
-    const [tasks, setTasks] = useState([]);
-    const [stops, setStops] = useState([]); 
-    const [data, setData] = useState([
+	const [detail, setDetail] = useState({ driver: "", viewer: "" });
+	const [authTokens, setAuthTokens] = useState([]);
+	const [isPopUp, setPopUp] = useState(false);
+	const [tasks, setTasks] = useState([]);
+	const [stops, setStops] = useState([]);
+	const [data, setData] = useState([
 		{
 			Stop: "",
 			Priority: null,
@@ -72,12 +72,12 @@ export default function Room() {
 			TaskName: "",
 		},
 	]);
-    
-    async function handleSubmit(){
-        navigate('/Home')
-    }
 
-    async function deleteTask(taskId) {
+	async function handleSubmit() {
+		navigate("/Home");
+	}
+
+	async function deleteTask(taskId) {
 		let resp = await fetch("http://127.0.0.1:8000/api/deleteTask/", {
 			method: "DELETE",
 			headers: {
@@ -93,8 +93,27 @@ export default function Room() {
 			alert("couldnt delete task");
 		}
 	}
+	async function deleteStop(stopName) {
+		let resp = await fetch("http://127.0.0.1:8000/api/deleteStop/", {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+			body: JSON.stringify({
+				routeCode: code,
+				stopName: stopName,
+			}),
+		});
 
-    async function addTask() {
+		if (resp.status == "200") {
+			alert("Stop Removed");
+		} else {
+			alert("couldnt delete stop");
+		}
+	}
+
+	async function addTask() {
 		//make obj
 		var temp = {
 			RouteCode: code,
@@ -115,7 +134,7 @@ export default function Room() {
 		console.log(data);
 	}
 
-    async function addStop() {
+	async function addStop() {
 		console.log(newStop.routeCode);
 		let resp = await fetch("http://127.0.0.1:8000/api/addStop/", {
 			method: "POST",
@@ -130,7 +149,7 @@ export default function Room() {
 		console.log(data);
 	}
 
-    function popUp(e) {
+	function popUp(e) {
 		if (isPopUp) {
 			setPopUp(false);
 			console.log(isPopUp);
@@ -140,13 +159,13 @@ export default function Room() {
 		}
 	}
 
-    useEffect(() => {
-        getTasks();
-        //addTask();
-        //addStop();
-    }, [] )
+	useEffect(() => {
+		getTasks();
+		//addTask();
+		//addStop();
+	}, []);
 
-    async function getTasks() {
+	async function getTasks() {
 		let resp = await fetch("http://127.0.0.1:8000/api/getTasks/", {
 			method: "GET",
 			headers: {
@@ -177,94 +196,100 @@ export default function Room() {
 		setData(newArr);
 	}
 
-    return (
-    <div>
-        <div class="sized">
-            <h1> Routing Room </h1>
-        </div>
-        <br />
-        <div class="sized" border="black">
-            Route Code: {code}
-        </div>
-        <br />
-        <div>
-            {tasks.map((task) => (
-                <div
-                    key={task.id}
-                    onClick={(e) => {
-                        setSelected(task.Stop);
-                        setIsActive(false);
-                    }}
-                >
-                    <h3>{task.Stop}</h3>
-                    {task.TaskInfo.map((taskInfo) => (
-                        <div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
-                            <div>id: {taskInfo.id}</div>
-                            <div>taskName: {taskInfo.taskName}</div>
-                            <div>stopId: {taskInfo.stopId}</div>
-                        </div>
-                    ))}
-                </div>
-            ))}
-        </div>
-        <section className="AddTask">
-            <div className="dropdown">
-                <div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
-                    {selected}
-                </div>
-                {isActive ? (
-                    <div className="dropdown-content">
-                        {tasks.map((task) => (
-                            <div
-                                key={task.id}
-                                onClick={(e) => {
-                                    setIsActive(false);
-                                    setSelected(task.Stop);
-                                }}
-                            >
-                                {task.Stop}
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    ""
-                )}
-            </div>
+	return (
+		<div>
+			<div class="sized">
+				<h1> Routing Room </h1>
+			</div>
+			<br />
+			<div class="sized" border="black">
+				Route Code: {code}
+			</div>
+			<br />
+			<div>
+				{tasks.map((task) => (
+					<div
+						key={task.id}
+						onClick={(e) => {
+							setSelected(task.Stop);
+							setIsActive(false);
+						}}
+					>
+						<h3
+							onClick={() => {
+								deleteStop(task.Stop);
+							}}
+						>
+							{task.Stop}
+						</h3>
+						{task.TaskInfo.map((taskInfo) => (
+							<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
+								<div>id: {taskInfo.id}</div>
+								<div>taskName: {taskInfo.taskName}</div>
+								<div>stopId: {taskInfo.stopId}</div>
+							</div>
+						))}
+					</div>
+				))}
+			</div>
+			<section className="AddTask">
+				<div className="dropdown">
+					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+						{selected}
+					</div>
+					{isActive ? (
+						<div className="dropdown-content">
+							{tasks.map((task) => (
+								<div
+									key={task.id}
+									onClick={(e) => {
+										setIsActive(false);
+										setSelected(task.Stop);
+									}}
+								>
+									{task.Stop}
+								</div>
+							))}
+						</div>
+					) : (
+						""
+					)}
+				</div>
 
-            <TextField
-                id="filled-basic"
-                className="TaskTextField"
-                label="Add a Task"
-                name="taskInput"
-                variant="filled"
-                value={taskInput}
-                onChange={(e) => setTaskInput(e.target.value)}
-            />
-            <Button className="TaskButton" onClick={addTask}>
-                Click here to add a task
-            </Button>
-        </section>
+				<TextField
+					id="filled-basic"
+					className="TaskTextField"
+					label="Add a Task"
+					name="taskInput"
+					variant="filled"
+					value={taskInput}
+					onChange={(e) => setTaskInput(e.target.value)}
+				/>
+				<Button className="TaskButton" onClick={addTask}>
+					Click here to add a task
+				</Button>
+			</section>
 
-        <section className="AddStop">
-            <TextField
-                id="filled-basic"
-                className="StopTextField"
-                label="Add a Stop"
-                name="newStop.stopAddress"
-                variant="filled"
-                value={newStop.stopAddress}
-                onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
-            />
-            <Button className="StopButton" onClick={addStop}>
-                Click here to add a Stop to your route
-            </Button>
-        </section>
-        <br />
-        <div>
-            <Button onClick={handleSubmit}>Leave Route</Button>
-        </div>
-        <br/>
-        <br/>
-    </div>
-    )
+			<section className="AddStop">
+				<TextField
+					id="filled-basic"
+					className="StopTextField"
+					label="Add a Stop"
+					name="newStop.stopAddress"
+					variant="filled"
+					value={newStop.stopAddress}
+					onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
+				/>
+				<Button className="StopButton" onClick={addStop}>
+					Click here to add a Stop to your route
+				</Button>
+			</section>
+			<br />
+			<div>
+				<Button onClick={handleSubmit}>Leave Route</Button>
+			</div>
+			<br />
+			<br />
+		</div>
+	);
 }

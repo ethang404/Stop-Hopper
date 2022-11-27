@@ -8,7 +8,7 @@ export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
 	const [favRoutes, setFavRoutes] = useState([]);
-	const [code,setCode] = useState("")	
+	const [code, setCode] = useState("");
 
 	const [data, setData] = useState([
 		{
@@ -139,42 +139,6 @@ export default function NavigateHome() {
 							value={data[0].Stop}
 							onChange={(e) => handleChange(e, 0)}
 						/>
-						<Fab size="small" className="detailButton" aria-label="edit" onClick={popUp}>
-							<EditIcon />
-						</Fab>
-						{isPopUp ? (
-							<div className="Popup">
-								<TextField
-									id="outlined-number"
-									type="number"
-									className="TextField"
-									label="Priority(1-7): "
-									name="Priority"
-									value={data[0].Priority}
-									onChange={(e) => handleChange(e, 0)}
-								/>
-								<TextField
-									id="filled-basic"
-									className="TextField"
-									label="Arrive By: "
-									helperText="What time to arrive at stop by"
-									name="ArriveBy"
-									variant="filled"
-									value={data[0].ArriveBy}
-									onChange={(e) => handleChange(e, 0)}
-								/>
-								<TextField
-									id="filled-basic"
-									className="TextField"
-									label="TaskName"
-									helperText="What todo"
-									name="TaskName"
-									variant="filled"
-									value={data[0].TaskName}
-									onChange={(e) => handleChange(e, 0)}
-								/>
-							</div>
-						) : null}
 					</section>
 					<section className="inputGroup">
 						<TextField
@@ -470,8 +434,19 @@ export default function NavigateHome() {
 			</section>
 			<h3>--Or--</h3>
 			<section className="JoinRoom">
-				<TextField id="standard-basic" label="RoomCode" variant="standard" value = {code} onChange={(e) => setCode(e.target.value)}/>
-				<Button variant="outlined" color="error" className="JoinRoomButton" onClick={() => navigate('/Room/'+code)}>
+				<TextField
+					id="standard-basic"
+					label="RoomCode"
+					variant="standard"
+					value={code}
+					onChange={(e) => setCode(e.target.value)}
+				/>
+				<Button
+					variant="outlined"
+					color="error"
+					className="JoinRoomButton"
+					onClick={() => navigate("/Room/" + code)}
+				>
 					Join Route Room
 				</Button>
 			</section>
