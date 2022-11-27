@@ -71,9 +71,6 @@ def addStop(request):
 def deleteTask(request):
     taskId = request.data['id']
     try:
-        #answers = Stops.objects.filter(route_id_id=route.id).get(stopAddress=stopName)
-        #sId = answers.id
-        #Tasks.objects.filter(stopId_id=sId).get(taskName=tName).delete() #should I pass id instead?
         Tasks.objects.get(id = taskId).delete()
         return Response({'Status':status.HTTP_200_OK, "Result":"Task Deleted"})
     except:
@@ -150,7 +147,7 @@ def calculateRoute(request):
     #get routeId then query stops with that routeId
     routeId = Route.objects.get(routeCode=routeCode)
     stops = Stops.objects.filter(route_id_id=routeId.id)
-    preferences = Preferences.objects.get(stop_id=stops[0].id)
+    preferences = Preferences.objects.get(stop_id_id=stops[0].id)
 
     #print(preferences)
 
@@ -261,13 +258,11 @@ def submitStops(request): #need to make tweaks to better handle error handling. 
                 stop = Stops(stopAddress=obj['Stop'], route_id_id=routeId.id)
                 stop.save()
                 try:#Saving Preferences attached to Stop
-                    stopSet = Stops.objects.filter(stopAddress=obj['Stop'])[0]
-                    print(stopSet.id)
                     if obj['TaskName'] != '':
-                        tasks = Tasks(taskName=obj['TaskName'],stopId_id=stopSet.id)
+                        tasks = Tasks(taskName=obj['TaskName'],stopId_id=stop.id)
                         tasks.save()
                     if obj['Priority'] != None and obj['Priority'] !="":#dont assign preferences if things are empty/null
-                        pref = Preferences(arriveBy=obj['ArriveBy'],priority=obj['Priority'],stop_id_id=stopSet.id)
+                        pref = Preferences(arriveBy=obj['ArriveBy'],priority=obj['Priority'],stop_id_id=stop.id)
                         pref.save()
                 except Stops.DoesNotExist:
                     return Response({"No Stop found"})
