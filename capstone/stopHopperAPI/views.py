@@ -71,9 +71,6 @@ def addStop(request):
 def deleteTask(request):
     taskId = request.data['id']
     try:
-        #answers = Stops.objects.filter(route_id_id=route.id).get(stopAddress=stopName)
-        #sId = answers.id
-        #Tasks.objects.filter(stopId_id=sId).get(taskName=tName).delete() #should I pass id instead?
         Tasks.objects.get(id = taskId).delete()
         return Response({'Status':status.HTTP_200_OK, "Result":"Task Deleted"})
     except:
