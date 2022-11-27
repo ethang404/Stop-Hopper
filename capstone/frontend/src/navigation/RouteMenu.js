@@ -7,7 +7,9 @@ import {
 	DirectionsService,
 } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 export default function RouteMenu() {
+	let {code} = useParams()
 	const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 	const [tasks, setTasks] = useState([]);
 	const [directions, setDirections] = useState();
@@ -31,7 +33,7 @@ export default function RouteMenu() {
 				"Content-Type": "application/json",
 				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
 			},
-			body: JSON.stringify({ RouteCode: "a2zXBs" }), //make dynamic(passed from NavigateHome)
+			body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
 		});
 		let data = await resp.json();
 		setStopOrder(data);
