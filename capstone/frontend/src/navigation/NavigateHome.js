@@ -1,9 +1,10 @@
 import { InputAdornment, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
-import {Component, useState} from "react";
+import {Component, useEffect, useState} from "react";
 import "./Navhome.css";
 import { useNavigate } from "react-router-dom";
-import { ShColorButton, ShTextField, ShThemeDiv } from "../ShComponents";
+import {ShColorButton, ShColorButtonNoFullWidth, ShTextField, ShThemeDiv} from "../ShComponents";
+import {Label} from "@mui/icons-material";
 
 /**
  * A Text entry field for stops which has an edit button.
@@ -73,7 +74,6 @@ function StopEdit(props) {
 					name={"Priority"}
 					value={props.priorityValue}
 					onChange={(e) => {
-						console.log(e.target.value)
 						if (e.target.value >= -3 && e.target.value <= 3) {
 							return props.onChange(e)
 						}
@@ -96,6 +96,51 @@ function StopEdit(props) {
 				value={props.notesValue}
 				onChange={props.onChange}
 			/>
+		</div>
+	</ShThemeDiv>
+}
+
+/**
+ * A component that displays previous routes a user has taken and allows them to quickly jump to them
+ * by clicking a button for the route.
+ *
+ * @param props the properties that will be applied to the top level element
+ * @param props.routes a JS object referencing a list of routes the user has taken
+ * @param props.onClick the method to call when a route button is clicked, passes the route code as an argument
+ */
+function PreviousRoutes(props) {
+	const childProps = {...props}
+	delete childProps.routes
+	delete childProps.onClick
+
+	return <ShThemeDiv {...childProps} >
+		<div
+			className={"flex-container"}
+			style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				margin: "10px" }} >
+			<h3>Previous Routes</h3>
+			<div
+				className={"flex-container"}
+				style={{
+					display: "flex",
+					flexDirection: "row",
+					flexWrap: "wrap",
+					gap: "10px", }} >
+				{props.routes.map(route => {
+					const routeCode = route['routeCode']
+
+					return <ShColorButtonNoFullWidth
+						key={routeCode}
+						style={{ flexGrow: 1, minWidth: "25%", fontFamily: "monospace" }}
+						onClick={() => props.onClick(routeCode)}>
+						{routeCode}
+					</ShColorButtonNoFullWidth>
+				})}
+			</div>
 		</div>
 	</ShThemeDiv>
 }
@@ -266,7 +311,25 @@ class StopList extends Component {
 export default function NavigateHome() {
 	let navigate = useNavigate();
 
+	const [favRoutes, setFavRoutes] = useState([]);
 	const [joinCode, setJoinCode] = useState('')
+
+	useEffect(() => {
+		getFavRoutes();
+	}, []);
+
+	async function getFavRoutes() {
+		let resp = await fetch("http://127.0.0.1:8000/api/getRoutes/", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
+			},
+		});
+		let data = await resp.json();
+		console.log(data);
+		setFavRoutes(data);
+	}
 
 	/**
 	 * Collect data from the stops and redirect to the navigation page
@@ -309,21 +372,35 @@ export default function NavigateHome() {
 				marginRight: "auto",
 				marginTop: "10px", }} >
 			{/* Top Section Start */}
-			<div
-				className={"flex-container"}
+			{ favRoutes.length > 0 &&
+				<div
+					className={"flex-container"}
 					style={{
-					display: "flex",
-					flexDirection: "row",
-					justifyContent: "space-evenly",
-					gap: "10px", }} >
-				<ShThemeDiv style={{flexGrow: 3, width: "100%"}}/>
+						display: "flex",
+						flexDirection: "row",
+						justifyContent: "space-evenly",
+						gap: "10px",
+					}}>
+					<PreviousRoutes
+						style={{flexGrow: 3, width: "100%"}}
+						routes={favRoutes}
+						onClick={(routeCode) => navigate('/RouteMenu/' + routeCode)}
+					/>
+					<JoinRoom
+						style={{flexGrow: 1}}
+						routeCodeValue={joinCode}
+						routeCodeOnChange={(e) => setJoinCode(e.target.value)}
+						joinRouteOnClick={() => navigate('/RouteMenu/' + joinCode)}
+					/>
+				</div>
+			}
+			{ favRoutes.length === 0 &&
 				<JoinRoom
-					style={{flexGrow: 1}}
 					routeCodeValue={joinCode}
 					routeCodeOnChange={(e) => setJoinCode(e.target.value)}
 					joinRouteOnClick={() => navigate('/RouteMenu/' + joinCode)}
 				/>
-			</div>
+			}
 			{/* Top Section End */}
 			<StopList
 				startRouting={startRouting}
