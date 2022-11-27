@@ -121,7 +121,7 @@ function JoinRoom(props) {
 			style={{
 				margin: "10px",
 				display: "flex",
-				flexDirection: "row",
+				flexDirection: "column",
 				justifyContent: "space-evenly",
 				gap: "10px", }} >
 			<ShTextField
@@ -308,11 +308,23 @@ export default function NavigateHome() {
 				marginLeft: "auto",
 				marginRight: "auto",
 				marginTop: "10px", }} >
-			<JoinRoom
-				routeCodeValue={joinCode}
-				routeCodeOnChange={(e) => setJoinCode(e.target.value)}
-				joinRouteOnClick={() => navigate('/Home/' + joinCode)}
-			/>
+			{/* Top Section Start */}
+			<div
+				className={"flex-container"}
+					style={{
+					display: "flex",
+					flexDirection: "row",
+					justifyContent: "space-evenly",
+					gap: "10px", }} >
+				<ShThemeDiv style={{flexGrow: 3, width: "100%"}}/>
+				<JoinRoom
+					style={{flexGrow: 1}}
+					routeCodeValue={joinCode}
+					routeCodeOnChange={(e) => setJoinCode(e.target.value)}
+					joinRouteOnClick={() => navigate('/Home/' + joinCode)}
+				/>
+			</div>
+			{/* Top Section End */}
 			<StopList
 				startRouting={startRouting}
 			/>
