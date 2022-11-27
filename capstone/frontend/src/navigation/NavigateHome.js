@@ -321,7 +321,7 @@ export default function NavigateHome() {
 					style={{flexGrow: 1}}
 					routeCodeValue={joinCode}
 					routeCodeOnChange={(e) => setJoinCode(e.target.value)}
-					joinRouteOnClick={() => navigate('/Home/' + joinCode)}
+					joinRouteOnClick={() => navigate('/RouteMenu/' + joinCode)}
 				/>
 			</div>
 			{/* Top Section End */}
