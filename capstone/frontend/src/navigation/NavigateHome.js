@@ -5,6 +5,7 @@ import "./Navhome.css";
 import { useNavigate } from "react-router-dom";
 import {ShColorButton, ShColorButtonNoFullWidth, ShTextField, ShThemeDiv} from "../ShComponents";
 import {Label} from "@mui/icons-material";
+import {getFavRoutes} from "../StopHopperApi";
 
 /**
  * A Text entry field for stops which has an edit button.
@@ -314,22 +315,8 @@ export default function NavigateHome() {
 	const [favRoutes, setFavRoutes] = useState([]);
 	const [joinCode, setJoinCode] = useState('')
 
-	useEffect(() => {
-		getFavRoutes();
-	}, []);
-
-	async function getFavRoutes() {
-		let resp = await fetch("http://127.0.0.1:8000/api/getRoutes/", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
-			},
-		});
-		let data = await resp.json();
-		console.log(data);
-		setFavRoutes(data);
-	}
+	// Get the past routes for the user
+	useEffect(() => { getFavRoutes().then(json => setFavRoutes(json)) }, []);
 
 	/**
 	 * Collect data from the stops and redirect to the navigation page
