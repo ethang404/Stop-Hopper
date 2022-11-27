@@ -119,13 +119,23 @@ def getTasks(request):
             continue
     return Response(data)
     
-@permission_classes((IsAuthenticated,)) #this checks if the user is valid
+#@permission_classes((IsAuthenticated,)) #this checks if the user is valid
+@api_view(['GET'])
 def hello_world(request):
-    tokenResult = JWTAuthentication().authenticate(request) #this checks if the provided token(in header) is valid
-    if tokenResult:
-        return HttpResponse("return this string")
-    else:
-        return HttpResponse("Invalid Token")
+    routeCode = "u5WbrD"
+    routeId = Route.objects.get(routeCode=routeCode)
+    stops = Stops.objects.filter(route_id_id=routeId.id)
+    preferences = Preferences.objects.get(stop_id=stops[0].id)
+    #data = []
+    val = PreferencesSerializer(preferences)
+    #data.append(preferences)
+    return Response(val.data)
+
+    #tokenResult = JWTAuthentication().authenticate(request) #this checks if the provided token(in header) is valid
+    #if tokenResult:
+        #return HttpResponse("return this string")
+    #else:
+        #return HttpResponse("Invalid Token")
 
 @api_view(['POST'])
 def calculateRoute(request):
@@ -144,12 +154,31 @@ def calculateRoute(request):
     return Response(myData)
     #serializer = StopsSerializer(stops, many=True)
     #data = serializer.data
+    
     #print(data)
     #return Response(serializer.data)
 
     return Response("Calculated Route", status=status.HTTP_200_OK)
+@api_view(['GET'])
+def getRoutes(request):
+    token = request.headers['Authorization'].split(' ')[1]
+    #routeCode = request.headers['routeCode']
+    token = jwt.decode(token, env('SECRET_KEY'), algorithms=["HS256"])
+    print(token)
+    print(token['user_id'])
 
-@api_view(['POST'])
+    data = []
+    routes = Route.objects.filter(user_id_id=token['user_id'])
+    counter = 0
+    for route in routes:
+        if counter < 10:
+            data.append({"id":route.id,"routeCode":route.routeCode,"user_id":route.user_id_id})
+            counter += 1
+        else:
+            return Response(data, status=status.HTTP_200_OK)
+    return Response(data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
 def deleteRoute(request):
     try:
         routeCode = request.data['RouteCode']
