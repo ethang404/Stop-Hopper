@@ -7,8 +7,9 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function NavigateHome() {
 	let navigate = useNavigate();
 	const [isPopUp, setPopUp] = useState(false);
+	const [favRoutes, setFavRoutes] = useState([]);
 	const [code,setCode] = useState("")	
-	const [favRoutes, setFavRoutes] = useState([]);	
+
 	const [data, setData] = useState([
 		{
 			Stop: "",
@@ -111,8 +112,7 @@ export default function NavigateHome() {
 		if (response.ok) {
 			console.log("everything is good");
 			alert("Routing Began!");
-			navigate("/RouteMenu/" + code);
-			//navigate("/RouteMenu/" + "a2zXBs"); //make dynamic later
+			navigate("/RouteMenu/" + code); //make dynamic later
 		} else {
 			console.log("Something went wrong");
 			console.log("error");
@@ -133,7 +133,7 @@ export default function NavigateHome() {
 						<TextField
 							id="filled-basic"
 							className="TextField"
-							label="Stop #1"
+							label="Point of Origin"
 							name="Stop"
 							variant="filled"
 							value={data[0].Stop}
@@ -156,7 +156,7 @@ export default function NavigateHome() {
 								<TextField
 									id="filled-basic"
 									className="TextField"
-									label="Arrive By(what time to arrive at stop): "
+									label="Arrive By: "
 									helperText="What time to arrive at stop by"
 									name="ArriveBy"
 									variant="filled"
