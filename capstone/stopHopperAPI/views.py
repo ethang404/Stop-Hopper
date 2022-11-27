@@ -133,7 +133,7 @@ def calculateRoute(request):
     #get routeId then query stops with that routeId
     routeId = Route.objects.get(routeCode=routeCode)
     stops = Stops.objects.filter(route_id_id=routeId.id)
-    preferences = Preferences.objects.get(stop_id=stops[0].id)
+    preferences = Preferences.objects.get(stop_id_id=stops[0].id)
 
     #print(preferences)
 
