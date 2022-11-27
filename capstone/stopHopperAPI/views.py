@@ -212,13 +212,11 @@ def submitStops(request): #need to make tweaks to better handle error handling. 
                 stop = Stops(stopAddress=obj['Stop'], route_id_id=routeId.id)
                 stop.save()
                 try:#Saving Preferences attached to Stop
-                    stopSet = Stops.objects.filter(stopAddress=obj['Stop'])[0]
-                    print(stopSet.id)
                     if obj['TaskName'] != '':
-                        tasks = Tasks(taskName=obj['TaskName'],stopId_id=stopSet.id)
+                        tasks = Tasks(taskName=obj['TaskName'],stopId_id=stop.id)
                         tasks.save()
                     if obj['Priority'] != None and obj['Priority'] !="":#dont assign preferences if things are empty/null
-                        pref = Preferences(arriveBy=obj['ArriveBy'],priority=obj['Priority'],stop_id_id=stopSet.id)
+                        pref = Preferences(arriveBy=obj['ArriveBy'],priority=obj['Priority'],stop_id_id=stop.id)
                         pref.save()
                 except Stops.DoesNotExist:
                     return Response({"No Stop found"})
