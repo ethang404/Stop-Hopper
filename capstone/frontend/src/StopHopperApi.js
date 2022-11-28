@@ -50,6 +50,16 @@ export async function performLogin(loginDetails) {
 }
 
 /**
+ * Perform what is effectively a logout, delete local tokens.
+ *
+ * @returns {Promise<void>}
+ */
+export async function logout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+}
+
+/**
  * Register a new account, will not perform a login.
  *
  * accountDetails
