@@ -50,6 +50,28 @@ export async function performLogin(loginDetails) {
 }
 
 /**
+ * Register a new account, will not perform a login.
+ *
+ * accountDetails
+ * {
+ *  username: string,
+ *  password: string
+ * }
+ *
+ * @param accountDetails the username/password/email of the new account
+ * @returns {Promise<Response>} the response of the API call
+ */
+export async function performRegister(accountDetails) {
+    return await fetch("http://127.0.0.1:8000/api/register/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(accountDetails),
+    });
+}
+
+/**
  * Get the past routes a user has taken from SQL
  *
  * {

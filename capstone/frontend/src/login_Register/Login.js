@@ -7,7 +7,7 @@ import { Component, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
-import {performLogin} from "../StopHopperApi";
+import {performLogin, performRegister} from "../StopHopperApi";
 
 function ShTextFieldError(props) {
 	return <ShTextField
@@ -119,13 +119,11 @@ export default function Login() {
 		}
 
 		// Create account via backend API
-		let response = await fetch("http://127.0.0.1:8000/api/register/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(detail),
-		});
+		let response = await performRegister({
+			"username": detail.username,
+			"password": detail.password,
+			"email": detail.email})
+
 		if (response.ok) {
 			// Go back to the login state
 			setShowRegister(false)
