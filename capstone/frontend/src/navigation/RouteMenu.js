@@ -98,6 +98,10 @@ export default function RouteMenu() {
 		}
 	}
 	async function logout() {
+		// Delete cookies used for login
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+
 		if (isFavorite) {
 			navigate("/");
 		} else {
