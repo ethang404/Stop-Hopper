@@ -142,47 +142,201 @@ def hello_world(request):
 def calculateRoute(request):
     #ideally this calculates the optimal order of stops to make in a route. Hardcode for demo :O?
     routeCode = request.data['RouteCode']
-    print(routeCode)
+    #print(routeCode)
     #Query for all stops with above Route Code:
     #get routeId then query stops with that routeId
     routeId = Route.objects.get(routeCode=routeCode)
     stops = Stops.objects.filter(route_id_id=routeId.id)
-    preferences = Preferences.objects.get(stop_id_id=stops[0].id)
 
-    #print(preferences)
-
-
-    #for i in preferences:
-        #print(i.priority)
-    #serializer = StopsSerializer(stops, many=True)
-    #data = serializer.data
-    #myTest = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=1800%20County%20Road%20321%20Bertram%20TX%2078605&destination=1819%20Glenna%20Goodacre%20Blvd%20Lubbock%20TX&key=AIzaSyCPQNTJv4XB3ULqZAgi1jNmcvxqLMHUKTs")
-    #print(myTest.text)
-    x = 0
+    stopList = []
+    positiveStopList = []
+    negativeStopList = []
     for i in stops:
+        if i == stops[0]:
+            continue
+        try:
+            pref = Preferences.objects.get(stop_id=i.id)
+            if pref.priority > 0:
+                index = 0
+                for j in positiveStopList:
+                    if j[1] < pref.priority:
+                        break
+                    index += 1
+                positiveStopList.insert(index, [i, pref.priority])
+            elif pref.priority < 0:
+                index = 0
+                for j in negativeStopList:
+                    if j[1] < pref.priority:
+                        break
+                    index += 1
+                negativeStopList.insert(index, [i, pref.priority])
+            else:
+                stopList.append(i)
+        except:
+            stopList.append(i)
+
+    
+    if len(positiveStopList) == 0 and len(negativeStopList) == 0:
+        stopList.insert(0, stops[0])
+
+    x = 0
+    for i in stopList:
         x += 1
 
     #x = 2 #debug line!!!!!!!!!!!
     
-    map = np.empty([x, x])
+    if x != 0:
+        map = np.empty([x, x])
 
-    for i in range(x):
-        for j in range(i, x):
-            if i != j:
-                response = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=" + stops[i].stopAddress.replace(" ", "%20") + "&destination=" + stops[j].stopAddress.replace(" ", "%20") + "&key=AIzaSyCPQNTJv4XB3ULqZAgi1jNmcvxqLMHUKTs")
-                value = json.loads(response.text)["routes"][0]["legs"][0]["duration"]["value"]
-                map[i, j] = value
-                map[j, i] = value
-            else:
-                map[i,j] = 0
-    sequence, distance = tsp(map)
+        for i in range(x):
+            for j in range(i, x):
+                if i != j:
+                    response = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=" + stopList[i].stopAddress.replace(" ", "%20") + "&destination=" + stopList[j].stopAddress.replace(" ", "%20") + "&key=AIzaSyCPQNTJv4XB3ULqZAgi1jNmcvxqLMHUKTs")
+                    value = json.loads(response.text)["routes"][0]["legs"][0]["duration"]["value"]
+                    map[i, j] = value
+                    map[j, i] = value
+                else:
+                    map[i,j] = 0
+        sequence, distance = tsp(map)
     #we'd prob calculate optimal routes here:
     #print (sequence)
+
+    #initial garbage for unknown reasons.
     myData = [{"origin":"1819 Glenna Goodacre Blvd, Lubbock, TX 79401", "destination":"5225 Texas 289 Loop Frontage Road, S Loop 289 Suite 207, Lubbock, TX 79424","travelMode":"DRIVING"}]#, {"origin":"1819 Glenna Goodacre Blvd, Lubbock, TX 79401", "destination":"5225 Texas 289 Loop Frontage Road, S Loop 289 Suite 207, Lubbock, TX 79424","travelMode":"DRIVING"}]
-    for i in range(0, len(sequence)-1):
-        myData.append({"origin":stops[sequence[i]].stopAddress, "destination":stops[sequence[i+1]].stopAddress, "travelMode":"DRIVING"})
-    myData.append({"origin":stops[sequence[-1]].stopAddress, "destination":stops[sequence[0]].stopAddress, "travelMode":"DRIVING"})
     
+    #positive prio
+    if len(positiveStopList):
+        myData.append({"origin":stops[0].stopAddress, "destination":positiveStopList[0][0].stopAddress, "travelMode":"DRIVING"})
+        for i in range(0, len(positiveStopList) -1):
+            myData.append({"origin":positiveStopList[i][0].stopAddress, "destination":positiveStopList[i+1][0].stopAddress, "travelMode":"DRIVING"})
+        exitO = stops[0].stopAddress
+    else:
+        if (len(stopList)):
+            exitO = stopList[sequence[0]].stopAddress
+
+
+
+    #reorder sequence
+    if (len(positiveStopList) or len(negativeStopList)) and len(stopList):
+        if len(positiveStopList):
+            entry = positiveStopList[-1][0].stopAddress
+        else:
+            entry = stops[0].stopAddress
+        
+        if len(negativeStopList):
+            exit = negativeStopList[-1][0].stopAddress
+        else:
+            exit = stops[0].stopAddress
+        
+        entryMap = []
+        exitMap = []
+
+        for i in sequence:
+            response = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=" + entry.replace(" ", "%20") + "&destination=" + stopList[i].stopAddress.replace(" ", "%20") + "&key=AIzaSyCPQNTJv4XB3ULqZAgi1jNmcvxqLMHUKTs")
+            value = json.loads(response.text)["routes"][0]["legs"][0]["duration"]["value"]
+            entryMap.append(value)
+
+            response = requests.get("https://maps.googleapis.com/maps/api/directions/json?origin=" + exit.replace(" ", "%20") + "&destination=" + stopList[i].stopAddress.replace(" ", "%20") + "&key=AIzaSyCPQNTJv4XB3ULqZAgi1jNmcvxqLMHUKTs")
+            value = json.loads(response.text)["routes"][0]["legs"][0]["duration"]["value"]
+            exitMap.append(value)
+
+        #forwards
+        lowestStart = 0
+        lowestStartValue = 0
+        for i in range(0, len(sequence)):
+            current = entryMap[i]
+            current += exitMap[i-1]
+
+            for j in range(0, len(sequence)-1):
+                x = i + j
+                y = i + j + 1
+                if x >= len(sequence):
+                    x -= len(sequence)
+                if y >= len(sequence):
+                    y -= len(sequence)
+                current += map[sequence[x], sequence[y]]
+
+            if lowestStartValue == 0 or lowestStartValue > current:
+                lowestStart = i
+                lowestStartValue = current
+
+        lowestStartBackwards = 0
+        lowestStartValueBackwards = 0
+        sequenceBackwards = sequence.copy()
+        sequenceBackwards.reverse()
+        entryMapBackwards = entryMap.copy()
+        entryMapBackwards.reverse()
+        exitMapBackwards = exitMap.copy()
+        exitMapBackwards.reverse()
+        for i in range(0, len(sequenceBackwards)):
+            current = entryMapBackwards[i]
+            current += exitMapBackwards[i-1]
+
+            for j in range(0, len(sequenceBackwards)-1):
+                x = i + j
+                y = i + j + 1
+                if x >= len(sequenceBackwards):
+                    x -= len(sequenceBackwards)
+                if y >= len(sequenceBackwards):
+                    y -= len(sequenceBackwards)
+                current += map[sequenceBackwards[x], sequenceBackwards[y]]
+
+            if lowestStartValueBackwards == 0 or lowestStartValueBackwards > current:
+                lowestStartBackwards = i
+                lowestStartValueBackwards = current
+        
+
+
+        if lowestStartValue < lowestStartValueBackwards:
+            oldSequence = sequence.copy()
+        else:
+            oldSequence = sequenceBackwards.copy()
+        for i in range(len(sequence)):
+            x = i + lowestStart
+            if x >= len(sequence):
+                x -= len(sequence)
+            sequence[i] = oldSequence[x]
+
+
+
+
+
+    #optimized route.
+    if len(stopList):
+        if len(positiveStopList):
+            myData.append({"origin":positiveStopList[-1][0].stopAddress, "destination":stopList[sequence[0]].stopAddress, "travelMode":"DRIVING"})
+        elif len(negativeStopList):
+            myData.append({"origin":stops[0].stopAddress, "destination":stopList[sequence[0]].stopAddress, "travelMode":"DRIVING"})
+        for i in range(0, len(sequence)-1):
+            myData.append({"origin":stopList[sequence[i]].stopAddress, "destination":stopList[sequence[i+1]].stopAddress, "travelMode":"DRIVING"})
+    #if there is no stoplist
+    else:
+        #if there is positive prio list
+        if len(positiveStopList):
+            #if there is no negative prio
+            if len(negativeStopList) == 0:
+                myData.append({"origin":positiveStopList[-1][0].stopAddress, "destination":stops[0].stopAddress, "travelMode":"DRIVING"})
+            #if there is negative prio
+            else:
+                myData.append({"origin":positiveStopList[-1][0].stopAddress, "destination":negativeStopList[0][0].stopAddress, "travelMode":"DRIVING"})
+        #if there is not a positive prio list
+        else:
+            myData.append({"origin":stops[0].stopAddress, "destination":negativeStopList[0][0].stopAddress, "travelMode":"DRIVING"})
+
+    
+    
+
+    #negative prio.
+    if len(negativeStopList):
+        if len(stopList):
+            myData.append({"origin":stopList[sequence[-1]].stopAddress, "destination":negativeStopList[0][0].stopAddress, "travelMode":"DRIVING"})
+        for i in range(0, len(negativeStopList) -1):
+            myData.append({"origin":negativeStopList[i][0].stopAddress, "destination":negativeStopList[i+1][0].stopAddress, "travelMode":"DRIVING"})
+        myData.append({"origin":negativeStopList[-1][0].stopAddress, "destination":stops[0].stopAddress, "travelMode":"DRIVING"})
+    else:
+        if len(stopList):
+            myData.append({"origin":stopList[sequence[-1]].stopAddress, "destination":exitO, "travelMode":"DRIVING"})
+
     #myData = [{"origin":"1819 Glenna Goodacre Blvd, Lubbock, TX 79401", "destination":"5225 Texas 289 Loop Frontage Road, S Loop 289 Suite 207, Lubbock, TX 79424","travelMode":"DRIVING"},
     #{"origin":"5225 Texas 289 Loop Frontage Road, S Loop 289 Suite 207, Lubbock, TX 79424", "destination":"116 W Loop 289 Acc Rd, Lubbock, TX 79416","travelMode":"DRIVING"},
     #{"origin":"116 W Loop 289 Acc Rd, Lubbock, TX 79416", "destination":"1819 Glenna Goodacre Blvd, Lubbock, TX 79401","travelMode":"DRIVING"}]
