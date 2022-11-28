@@ -5,7 +5,7 @@ import "./Navhome.css";
 import { useNavigate } from "react-router-dom";
 import {ShColorButton, ShColorButtonNoFullWidth, ShTextField, ShThemeDiv} from "../ShComponents";
 import {Label} from "@mui/icons-material";
-import {getFavRoutes} from "../StopHopperApi";
+import {submitStop, getFavRoutes} from "../StopHopperApi";
 
 /**
  * A Text entry field for stops which has an edit button.
@@ -323,32 +323,18 @@ export default function NavigateHome() {
 		},
 		[]);
 
-	/**
-	 * Collect data from the stops and redirect to the navigation page
-	 *
-	 * @returns {Promise<void>}
-	 */
 	async function startRouting(stops) {
 		// Get our stops and strip out unnecessary data
 		const data = [...stops]
 		data.map(stop => { delete stop.Edit })
 
-		let response = await fetch("http://127.0.0.1:8000/api/submitStop/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
-			},
-			body: JSON.stringify(data),
-		});
-
-		let res = await response.json();
-		let code = res.RouteCode;
+		const response = await submitStop(data)
+		const json = response.json();
 
 		if (response.ok) {
-			navigate("/RouteMenu/" + code);
+			navigate("/RouteMenu/" + json['RouteCode']);
 		} else {
-			alert("Error " + res)
+			alert("Error " + response.status)
 		}
 	}
 
