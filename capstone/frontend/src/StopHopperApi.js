@@ -10,7 +10,7 @@
  *  ...
  * }
  *
- * @returns {Promise<any>}
+ * @returns {Promise<Response>}
  */
 export async function getFavRoutes() {
     return fetch("http://127.0.0.1:8000/api/getRoutes/", {
@@ -20,5 +20,4 @@ export async function getFavRoutes() {
                 Authorization: "Bearer " + JSON.parse(localStorage.getItem("accessToken")),
             },
         })
-        .then((r) => r.json())
 }

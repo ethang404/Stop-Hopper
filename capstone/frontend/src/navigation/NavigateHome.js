@@ -316,7 +316,12 @@ export default function NavigateHome() {
 	const [joinCode, setJoinCode] = useState('')
 
 	// Get the past routes for the user
-	useEffect(() => { getFavRoutes().then(json => setFavRoutes(json)) }, []);
+	useEffect(() => {
+			getFavRoutes()
+				.then(response => response.json())
+				.then(json => setFavRoutes(json))
+		},
+		[]);
 
 	/**
 	 * Collect data from the stops and redirect to the navigation page
