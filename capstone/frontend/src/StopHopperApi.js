@@ -1,4 +1,55 @@
 /**
+ * Perform a login
+ *
+ * loginDetails
+ * {
+ *  username: string,
+ *  password: string
+ * }
+ *
+ * @param loginDetails the username/password to attempt a login with
+ * @returns {Promise<Response>}
+ */
+async function token(loginDetails) {
+    return await fetch("http://127.0.0.1:8000/api/token/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginDetails),
+    });
+}
+
+/**
+ * Perform a login and store access/refresh tokens in local storage
+ *
+ * loginDetails
+ * {
+ *  username: string,
+ *  password: string
+ * }
+ *
+ * @param loginDetails the username/password to attempt a login with
+ * @returns {Boolean} true/false if login succeeded or not
+ */
+export async function performLogin(loginDetails) {
+    const response = await token(loginDetails);
+    const json = await response.json();
+
+    console.log("Login Response:" + response);
+    console.log("Login Response JSON:" + JSON.stringify(json));
+
+    if (response.ok) {
+        console.log("Login OK");
+        localStorage.setItem("accessToken", JSON.stringify(json['access']));
+        localStorage.setItem("refreshToken", JSON.stringify(json['refresh']));
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
  * Get the past routes a user has taken from SQL
  *
  * {

@@ -7,6 +7,7 @@ import { Component, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
+import {performLogin} from "../StopHopperApi";
 
 function ShTextFieldError(props) {
 	return <ShTextField
@@ -49,7 +50,6 @@ export default function Login() {
 	// Form and Login Vars
 	const emptyDetail = { username: "", password: "", passwordCheck: "", email: "" };
 	const [detail, setDetail] = useState(emptyDetail);
-	const [authTokens, setAuthTokens] = useState([]);
 
 	// Toggle Show Password Vars
 	// Using same state for both boxes, keeping both buttons for clarity
@@ -78,21 +78,10 @@ export default function Login() {
 	}
 
 	async function handleSubmitLogin() {
-		let response = await fetch("http://127.0.0.1:8000/api/token/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(detail),
-		});
-		let data = await response.json();
+		// await is needed here
+		const login = await performLogin({"username": detail.username, "password": detail.password});
 
-		console.log(data.access);
-		console.log(data.refresh);
-		if (response.status === 200) {
-			setAuthTokens(data);
-			localStorage.setItem("accessToken", JSON.stringify(data.access));
-			localStorage.setItem("refreshToken", JSON.stringify(data.refresh));
+		if (login) {
 			navigate("/Home");
 		} else {
 			setPasswordError("Username or Password is incorrect")
