@@ -6,11 +6,13 @@ import Room from "./room/Room";
 
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
+import NavBar from "./NavBar";
 
 function App() {
 	return (
 		<div className="App">
 			<Router>
+				<NavBar />
 				<Routes>
 					<Route exact path="/" element={<Login />}></Route>
 					<Route exact path="/Login" element={<Login />}></Route>

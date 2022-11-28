@@ -54,7 +54,7 @@ export async function performLogin(loginDetails) {
  *
  * @returns {Promise<void>}
  */
-export async function logout() {
+export function logout() {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 }
