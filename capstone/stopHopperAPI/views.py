@@ -119,24 +119,6 @@ def getTasks(request):
             
             continue
     return Response(data)
-    
-#@permission_classes((IsAuthenticated,)) #this checks if the user is valid
-@api_view(['GET'])
-def hello_world(request):
-    routeCode = "u5WbrD"
-    routeId = Route.objects.get(routeCode=routeCode)
-    stops = Stops.objects.filter(route_id_id=routeId.id)
-    preferences = Preferences.objects.get(stop_id=stops[0].id)
-    #data = []
-    val = PreferencesSerializer(preferences)
-    #data.append(preferences)
-    return Response(val.data)
-
-    #tokenResult = JWTAuthentication().authenticate(request) #this checks if the provided token(in header) is valid
-    #if tokenResult:
-        #return HttpResponse("return this string")
-    #else:
-        #return HttpResponse("Invalid Token")
 
 @api_view(['POST'])
 def calculateRoute(request):

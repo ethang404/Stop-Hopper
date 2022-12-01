@@ -7,7 +7,6 @@ from rest_framework_simplejwt.views import (
 )#Simple JWT import url
 
 urlpatterns = [
-    path('test/',hello_world),
     path('register/',registerUser),
     path('submitStop/',submitStops),
     path('deleteStop/',deleteStop),
