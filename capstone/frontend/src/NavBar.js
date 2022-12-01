@@ -26,7 +26,7 @@ export default function NavBar(props) {
                 margin: "10px",
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "left",
+                justifyContent: "space-between",
                 alignItems: "center",
                 gap: "20px", }} >
                 <BlackText
@@ -38,31 +38,33 @@ export default function NavBar(props) {
                 >
                     Stop-Hopper
                 </BlackText>
-                { !loggedIn &&
+                <div>
                     <ShColorButtonNoFullWidth
-                        key={"Login"}
-                        style={{fontSize: "16px", margin: "10px"}}
-                        onClick={() => navigate("/Login")}
+                        key={"Home"}
+                        style={buttonStyle}
+                        onClick={() => navigate("/Home")}
                     >
-                        Login
+                        Navigation
                     </ShColorButtonNoFullWidth>
-                }
-                { loggedIn &&
-                    <ShColorButtonNoFullWidth
-                        key={"Logout"}
-                        style={{ fontSize: "16px", margin: "10px",}}
-                        onClick={() => { logout(); navigate("/"); }}
+                    { !loggedIn &&
+                        <ShColorButtonNoFullWidth
+                            key={"Login"}
+                            style={{fontSize: "16px", margin: "10px"}}
+                            onClick={() => navigate("/Login")}
                         >
-                        Logout
-                    </ShColorButtonNoFullWidth>
-                }
-                <ShColorButtonNoFullWidth
-                    key={"Home"}
-                    style={buttonStyle}
-                    onClick={() => navigate("/Home")}
-                    >
-                    Navigation
-                </ShColorButtonNoFullWidth>
+                            Login
+                        </ShColorButtonNoFullWidth>
+                    }
+                    { loggedIn &&
+                        <ShColorButtonNoFullWidth
+                            key={"Logout"}
+                            style={{ fontSize: "16px", margin: "10px",}}
+                            onClick={() => { logout(); navigate("/"); }}
+                            >
+                            Logout
+                        </ShColorButtonNoFullWidth>
+                    }
+                </div>
             </div>
         </ShThemeDiv>
     </div>
