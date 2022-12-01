@@ -104,26 +104,28 @@ function TaskEdit(props) {
 	delete childProps.addTask
 
 	return <ShThemeDiv {...childProps} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
-		<div style={{
-			display: "flex",
-			flexDirection: "column",
-			justifyContent: "space-evenly",
-			gap: "10px",
-			margin: "10px",
-			overflow: "auto", }}
-		>
-			<Typography>
-				{props.selected}
-			</Typography>
-			<ShTextField
-				label="Task"
-				value={props.taskInput}
-				onChange={(e) => props.setTaskInput(e.target.value)}
-			/>
-			<ShColorButton onClick={props.addTask} disabled={props.taskInput.trim() === ""}>
-				Add Task
-			</ShColorButton>
-		</div>
+		<form onSubmit={props.addTask}>
+			<div style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				margin: "10px",
+				overflow: "auto", }}
+			>
+				<Typography>
+					{props.selected}
+				</Typography>
+				<ShTextField
+					label="Task"
+					value={props.taskInput}
+					onChange={(e) => props.setTaskInput(e.target.value)}
+				/>
+				<ShColorButton onClick={props.addTask} disabled={props.taskInput.trim() === ""}>
+					Add Task
+				</ShColorButton>
+			</div>
+		</form>
 	</ShThemeDiv>
 }
 
