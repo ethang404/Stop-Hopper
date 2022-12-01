@@ -14,6 +14,48 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {Fab, Button, TextField, IconButton, Typography} from "@mui/material";
 import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
 
+/**
+ * Simple widget to create a new task for the selected stop
+ *
+ * @param props props to add to the top level component
+ * @param props.taskInput the value of the task input box
+ * @param props.setTaskInput the method to call when updating the task input
+ * @param props.selected the name of the selected stop
+ * @param props.addTask the method to call when the add task button is clicked
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function TaskEdit(props) {
+	const childProps = {...props}
+	delete childProps.taskInput
+	delete childProps.setTaskInput
+	delete childProps.selected
+	delete childProps.addTask
+
+	return <ShThemeDiv {...childProps} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
+		<div style={{
+			display: "flex",
+			flexDirection: "column",
+			justifyContent: "space-evenly",
+			gap: "10px",
+			margin: "10px",
+			overflow: "auto", }}
+		>
+			<Typography>
+				{props.selected}
+			</Typography>
+			<ShTextField
+				label="Task"
+				value={props.taskInput}
+				onChange={(e) => props.setTaskInput(e.target.value)}
+			/>
+			<ShColorButton onClick={props.addTask} disabled={props.taskInput.trim() === ""}>
+				Add Task
+			</ShColorButton>
+		</div>
+	</ShThemeDiv>
+}
+
 export default function RouteMenu() {
 	const routePolyline = useRef();
 	const { code } = useParams();
@@ -269,32 +311,7 @@ export default function RouteMenu() {
 		</ShThemeDiv>
 	}
 
-	function TaskEdit(props) {
-		return <ShThemeDiv {...props} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
-			<div style={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "space-evenly",
-				gap: "10px",
-				margin: "10px",
-				overflow: "auto", }}
-			>
-				<Typography
-					onClick={(e) => setIsActive(!isActive)}
-				>
-					{selected}
-				</Typography>
-				<ShTextField
-					label="Task"
-					value={taskInput}
-					onChange={(e) => setTaskInput(e.target.value)}
-				/>
-				<ShColorButton onClick={addTask} disabled={taskInput.trim() === ""}>
-					Add Task
-				</ShColorButton>
-			</div>
-		</ShThemeDiv>
-	}
+
 
 	return (
 		<div style={{
@@ -335,7 +352,12 @@ export default function RouteMenu() {
 				</div>
 			</ShThemeDiv>
 			<StopList />
-			<TaskEdit />
+			<TaskEdit
+				taskInput={taskInput}
+				setTaskInput={setTaskInput.bind(this)}
+				selected={selected}
+				addTask={addTask.bind(this)}
+			/>
 
 			<section className="AddStop">
 				<TextField
