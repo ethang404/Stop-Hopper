@@ -295,77 +295,68 @@ export default function RouteMenu() {
 				</div>
 			</ShThemeDiv>
 			<StopList tasks={tasks}/>
-			<ShThemeDiv
-				className={"flex-container"}
-				style={{
-					display: "flex",
-					flexDirection: "column",
-					justifyContent: "space-evenly",
-					gap: "10px",
-					margin: "auto"
-				}}>
-				<section className="AddTask">
-					<div className="dropdown">
-						<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
-							{selected}
-						</div>
-						{isActive ? (
-							<div className="dropdown-content">
-								{tasks.map((task) => (
-									<div
-										key={task.id}
-										onClick={(e) => {
-											setIsActive(false);
-											setSelected(task.Stop);
-										}}
-									>
-										{task.Stop}
-									</div>
-								))}
-							</div>
-						) : (
-							""
-						)}
+			<section className="AddTask">
+				<div className="dropdown">
+					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+						{selected}
 					</div>
+					{isActive ? (
+						<div className="dropdown-content">
+							{tasks.map((task) => (
+								<div
+									key={task.id}
+									onClick={(e) => {
+										setIsActive(false);
+										setSelected(task.Stop);
+									}}
+								>
+									{task.Stop}
+								</div>
+							))}
+						</div>
+					) : (
+						""
+					)}
+				</div>
 
-					<TextField
-						id="filled-basic"
-						className="TaskTextField"
-						label="Add a Task"
-						name="taskInput"
-						variant="filled"
-						value={taskInput}
-						onChange={(e) => setTaskInput(e.target.value)}
-					/>
-					<Button className="TaskButton" onClick={addTask}>
-						Click here to add a task
-					</Button>
-				</section>
+				<TextField
+					id="filled-basic"
+					className="TaskTextField"
+					label="Add a Task"
+					name="taskInput"
+					variant="filled"
+					value={taskInput}
+					onChange={(e) => setTaskInput(e.target.value)}
+				/>
+				<Button className="TaskButton" onClick={addTask}>
+					Click here to add a task
+				</Button>
+			</section>
 
-				<section className="AddStop">
-					<TextField
-						id="filled-basic"
-						className="StopTextField"
-						label="Add a Stop"
-						name="newStop.stopAddress"
-						variant="filled"
-						value={newStop.stopAddress}
-						onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
-					/>
-					<Button className="StopButton" onClick={addStop}>
-						Click here to add a Stop to your route
-					</Button>
-				</section>
-				<Fab
-					size="small"
-					className="detailButton"
-					aria-label="edit"
-					onClick={() => setFavorite(true)}
-				>
-					<StarsIcon />
-				</Fab>
-				{JSON.stringify(isFavorite)}
-			</ShThemeDiv>
+			<section className="AddStop">
+				<TextField
+					id="filled-basic"
+					className="StopTextField"
+					label="Add a Stop"
+					name="newStop.stopAddress"
+					variant="filled"
+					value={newStop.stopAddress}
+					onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
+				/>
+				<Button className="StopButton" onClick={addStop}>
+					Click here to add a Stop to your route
+				</Button>
+			</section>
+			<Fab
+				size="small"
+				className="detailButton"
+				aria-label="edit"
+				onClick={() => setFavorite(true)}
+			>
+				<StarsIcon />
+			</Fab>
+			{JSON.stringify(isFavorite)}
+			<Button onClick={logout}>Logout</Button>
 		</div>
 	);
 }
