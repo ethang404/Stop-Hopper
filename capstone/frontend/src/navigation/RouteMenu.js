@@ -15,6 +15,77 @@ import {Fab, Button, TextField, IconButton, Typography} from "@mui/material";
 import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
 
 /**
+ * Basic list widget which lists stops and a delete button to the side.
+ *
+ * @param props Props to apply to the top level element
+ * @param props.tasks the list of stops to render
+ * @param props.setSelected the method to call when a stop name is clicked
+ * @param props.deleteStop the method to call when the delete icon is clicked
+ * @returns {JSX.Element}
+ */
+function StopList(props) {
+	const childProps = {...props}
+	delete childProps.tasks
+	delete childProps.setSelected
+	delete childProps.deleteStop
+
+	return <ShThemeDiv
+			{...props}
+			className={"flex-container"}
+			style={{ margin: "auto", overflow: "auto", width: "100%"}}
+		>
+		<div style={{
+			display: "flex",
+			flexDirection: "column",
+			justifyContent: "space-evenly",
+			gap: "10px",
+			margin: "10px",
+			overflow: "auto", }}
+		>
+			{props.tasks.map((task) => (
+				<ShThemeDiv style={{ backgroundColor: "#fc7676" }} >
+					<div
+						key={task.id}
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "space-evenly",
+							gap: "10px",
+							margin: "10px" }}
+					>
+						<div style={{
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center"}}
+							onClick={(e) => { props.setSelected(task.Stop) }}
+						>
+							<Typography style={{ marginLeft: "5px" }} fontWeight={"bold"} >
+								{task.Stop}
+							</Typography>
+							<IconButton aria-label="delete" onClick={() => { props.deleteStop(task.Stop) }} >
+								<DeleteIcon />
+							</IconButton>
+						</div>
+						{ task.TaskInfo.length > 0 &&
+							<div>
+							{
+							task.TaskInfo.map((taskInfo) => (
+								<Typography style={{ textAlign: "left" }}>
+									{taskInfo.taskName}
+								</Typography>
+							))
+							}
+							</div>
+						}
+					</div>
+				</ShThemeDiv>
+			))}
+		</div>
+	</ShThemeDiv>
+}
+
+/**
  * Simple widget to create a new task for the selected stop
  *
  * @param props props to add to the top level component
@@ -248,71 +319,6 @@ export default function RouteMenu() {
 		});
 	};*/
 
-	/**
-	 * Basic list widget which lists stops and a delete button to the side.
-	 *
-	 * @param props Props to apply to the top level element
-	 * @returns {JSX.Element}
-	 */
-	function StopList(props) {
-
-		return <ShThemeDiv {...props} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%"}} >
-			<div style={{
-				display: "flex",
-				flexDirection: "column",
-				justifyContent: "space-evenly",
-				gap: "10px",
-				margin: "10px",
-				overflow: "auto", }}
-			>
-				{tasks.map((task) => (
-					<ShThemeDiv style={{ backgroundColor: "#fc7676" }} >
-						<div
-							key={task.id}
-							style={{
-								display: "flex",
-								flexDirection: "column",
-								justifyContent: "space-evenly",
-								gap: "10px",
-								margin: "10px" }}
-						>
-							<div style={{
-								display: "flex",
-								flexDirection: "row",
-								justifyContent: "space-between",
-								alignItems: "center"}}
-								onClick={(e) => {
-									setSelected(task.Stop);
-									setIsActive(false);
-								}}
-							>
-								<Typography style={{ marginLeft: "5px" }} fontWeight={"bold"} >
-									{task.Stop}
-								</Typography>
-								<IconButton aria-label="delete" onClick={() => { deleteStop(task.Stop) }} >
-									<DeleteIcon />
-								</IconButton>
-							</div>
-							{ task.TaskInfo.length > 0 &&
-								<div>
-								{
-								task.TaskInfo.map((taskInfo) => (
-									<Typography style={{ textAlign: "left" }}>
-										{taskInfo.taskName}
-									</Typography>
-								))
-								}
-								</div>
-							}
-						</div>
-					</ShThemeDiv>
-				))}
-			</div>
-		</ShThemeDiv>
-	}
-
-
-
 	return (
 		<div style={{
 				display: "flex",
@@ -351,7 +357,11 @@ export default function RouteMenu() {
 					</ShColorButton>
 				</div>
 			</ShThemeDiv>
-			<StopList />
+			<StopList
+				tasks={tasks}
+				setSelected={setSelected.bind(this)}
+				deleteStop={deleteStop.bind(this)}
+			/>
 			<TaskEdit
 				taskInput={taskInput}
 				setTaskInput={setTaskInput.bind(this)}
