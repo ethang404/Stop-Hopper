@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import { useEffect, useState } from "react";
 import { Button, TextField, Fab } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import EditIcon from "@mui/icons-material/Edit";
 
 export default function Room() {
 	const { code } = useParams();
@@ -17,61 +16,8 @@ export default function Room() {
 		routeCode: code,
 		stopAddress: "", //should be a address for now
 	});
-	const [newTask, setNewTask] = useState({
-		RouteCode: code,
-		stopAddress: "Pick a Stop2",
-		taskName: "",
-	});
 
-	const [detail, setDetail] = useState({ driver: "", viewer: "" });
-	const [authTokens, setAuthTokens] = useState([]);
-	const [isPopUp, setPopUp] = useState(false);
 	const [tasks, setTasks] = useState([]);
-	const [stops, setStops] = useState([]);
-	const [data, setData] = useState([
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-		{
-			Stop: "",
-			Priority: null,
-			ArriveBy: "",
-			TaskName: "",
-		},
-	]);
 
 	async function handleSubmit() {
 		navigate("/Home");
@@ -120,7 +66,6 @@ export default function Room() {
 			stopAddress: selected,
 			taskName: taskInput,
 		};
-		console.log(newTask.RouteCode);
 		let resp = await fetch("http://127.0.0.1:8000/api/addTask/", {
 			method: "POST",
 			headers: {
@@ -149,16 +94,6 @@ export default function Room() {
 		console.log(data);
 	}
 
-	function popUp(e) {
-		if (isPopUp) {
-			setPopUp(false);
-			console.log(isPopUp);
-		} else {
-			setPopUp(true);
-			console.log(isPopUp);
-		}
-	}
-
 	useEffect(() => {
 		getTasks();
 		//addTask();
@@ -177,23 +112,6 @@ export default function Room() {
 		let data = await resp.json();
 		console.log(data);
 		setTasks(data);
-	}
-
-	function handleChange(e, index) {
-		console.log("index: " + index);
-		console.log("property name: " + e.target.name);
-		let newArr = [...data]; // copying the old datas array
-		// a deep copy is not needed as we are overriding the whole object below, and not setting a property of it. this does not mutate the state.
-		if (e.target.name === "Stop") {
-			newArr[index].Stop = e.target.value;
-		} else if (e.target.name === "Priority") {
-			newArr[index].Priority = e.target.value;
-		} else if (e.target.name === "ArriveBy") {
-			newArr[index].ArriveBy = e.target.value;
-		} else if (e.target.name === "TaskName") {
-			newArr[index].TaskName = e.target.value;
-		}
-		setData(newArr);
 	}
 
 	return (
