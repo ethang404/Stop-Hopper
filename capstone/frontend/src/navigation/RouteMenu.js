@@ -10,7 +10,8 @@ import {
 import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StarsIcon from "@mui/icons-material/Stars";
-import { Fab, Button, TextField } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
+import {Fab, Button, TextField, IconButton, Typography} from "@mui/material";
 import {ShColorButton, ShThemeDiv} from "../ShComponents";
 
 export default function RouteMenu() {
@@ -182,7 +183,7 @@ export default function RouteMenu() {
 			}),
 		});
 
-		if (resp.status == "200") {
+		if (resp.ok) {
 			alert("Stop Removed");
 		} else {
 			alert("couldnt delete stop");
@@ -210,6 +211,57 @@ export default function RouteMenu() {
 			setCurrentLocation({ currentLocation: pos });
 		});
 	};*/
+
+	/**
+	 * Basic list widget which lists stops and a delete button to the side.
+	 *
+	 * @param props Props to apply to the top level element
+	 * @returns {JSX.Element}
+	 */
+	function StopList(props) {
+
+		return <ShThemeDiv {...props} className={"flex-container"} style={{margin: "auto"}} >
+			<div style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				margin: "10px" }}
+			>
+				{tasks.map((task) => (
+					<div
+						key={task.id}
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							justifyContent: "space-evenly",
+							gap: "10px", }}
+					>
+						<div style={{
+							display: "flex",
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center", }}
+						>
+							<Typography style={{ marginLeft: "5px" }}>
+								{task.Stop}
+							</Typography>
+							<IconButton aria-label="delete" onClick={() => { deleteStop(task.Stop) }} >
+								<DeleteIcon />
+							</IconButton>
+						</div>
+						{task.TaskInfo.map((taskInfo) => (
+							<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
+								<div>id: {taskInfo.id}</div>
+								<div>taskName: {taskInfo.taskName}</div>
+								<div>stopId: {taskInfo.stopId}</div>
+							</div>
+						))}
+					</div>
+				))}
+			</div>
+		</ShThemeDiv>
+	}
 
 	return (
 		<div>
@@ -242,32 +294,7 @@ export default function RouteMenu() {
 					</ShColorButton>
 				</div>
 			</ShThemeDiv>
-			<div>
-				{tasks.map((task) => (
-					<div
-						key={task.id}
-						onClick={(e) => {
-							setSelected(task.Stop);
-							setIsActive(false);
-						}}
-					>
-						<h3
-							onClick={() => {
-								deleteStop(task.Stop);
-							}}
-						>
-							{task.Stop}
-						</h3>
-						{task.TaskInfo.map((taskInfo) => (
-							<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
-								<div>id: {taskInfo.id}</div>
-								<div>taskName: {taskInfo.taskName}</div>
-								<div>stopId: {taskInfo.stopId}</div>
-							</div>
-						))}
-					</div>
-				))}
-			</div>
+			<StopList tasks={tasks}/>
 			<section className="AddTask">
 				<div className="dropdown">
 					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
