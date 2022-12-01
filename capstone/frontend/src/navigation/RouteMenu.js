@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import StarsIcon from "@mui/icons-material/Stars";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Fab, Button, TextField, IconButton, Typography} from "@mui/material";
-import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
+import {ShColorButton, ShColorButtonNoFullWidth, ShTextField, ShThemeDiv} from "../ShComponents";
 
 /**
  * Basic list widget which lists stops and a delete button to the side.
@@ -169,6 +169,47 @@ function AddStop(props) {
 	</ShThemeDiv>
 }
 
+/**
+ * A simple component to toggle and view if the route is favorite
+ *
+ * @param props the props to set to the top level component
+ * @param props.setFavorite the method to call when the favorite button is clicked
+ * @param props.isFavorite value of if the route is set to favorite
+ * @param props.logout the method to call when the logout button is clicked
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function FavoriteToggle(props) {
+	const childProps = {...props}
+	delete childProps.setFavorite
+	delete childProps.isFavorite
+	delete childProps.logout
+
+	return <ShThemeDiv {...childProps}
+			   className={"flex-container"}
+			   style={{ margin: "auto", overflow: "auto", width: "100%"}}>
+		<div style={{
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+			gap: "10px",
+			margin: "10px",
+			overflow: "auto", }}>
+			<IconButton onClick={() => props.setFavorite(!props.isFavorite)}>
+				<StarsIcon />
+			</IconButton>
+			<Typography>
+				{props.isFavorite && "Route is set as favorite"}
+				{!props.isFavorite && "Route is not set as favorite"}
+			</Typography>
+			<ShColorButtonNoFullWidth onClick={props.logout}>
+				Logout
+			</ShColorButtonNoFullWidth>
+		</div>
+	</ShThemeDiv>
+}
+
 export default function RouteMenu() {
 	const routePolyline = useRef();
 	const { code } = useParams();
@@ -257,13 +298,8 @@ export default function RouteMenu() {
 		}
 	}
 	async function logout() {
-		// Delete cookies used for login
-		localStorage.removeItem("accessToken");
-		localStorage.removeItem("refreshToken");
-
-		if (isFavorite) {
-			navigate("/");
-		} else {
+		if (!isFavorite) {
+			console.log("Deleting route")
 			//if user not favorited the stop-remove from databse-redirect to home after
 			let resp = await fetch("http://127.0.0.1:8000/api/deleteRoute/", {
 				method: "DELETE",
@@ -273,9 +309,14 @@ export default function RouteMenu() {
 				},
 				body: JSON.stringify({ RouteCode: code }), //make dynamic(passed from NavigateHome)
 			});
-			console.log(resp.JSON);
-			navigate("/");
+			let data = await resp.json();
+			console.log(data);
 		}
+
+		// Delete cookies used for login
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+		navigate("/");
 	}
 
 	const center = {
@@ -399,6 +440,12 @@ export default function RouteMenu() {
 					</ShColorButton>
 				</div>
 			</ShThemeDiv>
+			{/* Favorite Toggle */}
+			<FavoriteToggle
+				setFavorite={setFavorite.bind(this)}
+				isFavorite={isFavorite}
+				logout={logout.bind(this)}
+			/>
 			{/* List of Stops/Tasks */}
 			<StopList
 				tasks={tasks}
@@ -426,17 +473,6 @@ export default function RouteMenu() {
 					addStop={addStop.bind(this)}
 				/>
 			</div>
-			
-			<Fab
-				size="small"
-				className="detailButton"
-				aria-label="edit"
-				onClick={() => setFavorite(true)}
-			>
-				<StarsIcon />
-			</Fab>
-			{JSON.stringify(isFavorite)}
-			<Button onClick={logout}>Logout</Button>
 		</div>
 	);
 }
