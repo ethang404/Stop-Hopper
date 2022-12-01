@@ -23,7 +23,7 @@ import {ShColorButton, ShColorButtonNoFullWidth, ShTextField, ShThemeDiv} from "
  * @param props.deleteStop the method to call when the delete icon is clicked
  * @returns {JSX.Element}
  */
-function StopList(props) {
+export function StopList(props) {
 	const childProps = {...props}
 	delete childProps.tasks
 	delete childProps.setSelected
@@ -96,7 +96,7 @@ function StopList(props) {
  * @returns {JSX.Element}
  * @constructor
  */
-function TaskEdit(props) {
+export function TaskEdit(props) {
 	const childProps = {...props}
 	delete childProps.taskInput
 	delete childProps.setTaskInput
@@ -139,7 +139,7 @@ function TaskEdit(props) {
  * @returns {JSX.Element}
  * @constructor
  */
-function AddStop(props) {
+export function AddStop(props) {
 	const childProps = {...props}
 	delete childProps.newStop
 	delete childProps.setNewStop

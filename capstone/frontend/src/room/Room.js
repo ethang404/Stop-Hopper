@@ -1,15 +1,15 @@
 import "./Room.css";
-import React, { Component } from "react";
+import React from "react";
 import { useEffect, useState } from "react";
-import { Button, TextField, Fab } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import {AddStop, StopList, TaskEdit} from "../navigation/RouteMenu";
+import {ShThemeDiv} from "../ShComponents";
+import {Typography} from "@mui/material";
 
 export default function Room() {
 	const { code } = useParams();
-	let navigate = useNavigate();
 
 	const [selected, setSelected] = useState("Pick a Stop");
-	const [isActive, setIsActive] = useState(false);
 	const [taskInput, setTaskInput] = useState("");
 
 	const [newStop, setNewStop] = useState({
@@ -18,10 +18,6 @@ export default function Room() {
 	});
 
 	const [tasks, setTasks] = useState([]);
-
-	async function handleSubmit() {
-		navigate("/Home");
-	}
 
 	async function deleteTask(taskId) {
 		let resp = await fetch("http://127.0.0.1:8000/api/deleteTask/", {
@@ -115,99 +111,43 @@ export default function Room() {
 	}
 
 	return (
-		<div>
-			<div class="sized">
-				<h1> Routing Room </h1>
-			</div>
-			<br />
-			<div class="sized" border="black">
-				Route Code: {code}
-			</div>
-			<br />
-			<div>
-				{tasks.map((task) => (
-					<div
-						key={task.id}
-						onClick={(e) => {
-							setSelected(task.Stop);
-							setIsActive(false);
-						}}
-					>
-						<h3
-							onClick={() => {
-								deleteStop(task.Stop);
-							}}
-						>
-							{task.Stop}
-						</h3>
-						{task.TaskInfo.map((taskInfo) => (
-							<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
-								<div>id: {taskInfo.id}</div>
-								<div>taskName: {taskInfo.taskName}</div>
-								<div>stopId: {taskInfo.stopId}</div>
-							</div>
-						))}
-					</div>
-				))}
-			</div>
-			<section className="AddTask">
-				<div className="dropdown">
-					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
-						{selected}
-					</div>
-					{isActive ? (
-						<div className="dropdown-content">
-							{tasks.map((task) => (
-								<div
-									key={task.id}
-									onClick={(e) => {
-										setIsActive(false);
-										setSelected(task.Stop);
-									}}
-								>
-									{task.Stop}
-								</div>
-							))}
-						</div>
-					) : (
-						""
-					)}
-				</div>
-
-				<TextField
-					id="filled-basic"
-					className="TaskTextField"
-					label="Add a Task"
-					name="taskInput"
-					variant="filled"
-					value={taskInput}
-					onChange={(e) => setTaskInput(e.target.value)}
+		<div style={{
+				display: "flex",
+				flexDirection: "column",
+				gap: "10px", }} >
+			{/* Route Code */}
+			<ShThemeDiv className={"flex-container"} style={{margin: "auto", width: "100%"}}>
+				<Typography style={{margin: "10px"}} fontWeight={"bold"} fontSize={"24pt"}>
+					Route Code: {code}
+				</Typography>
+			</ShThemeDiv>
+			{/* List of Stops/Tasks */}
+			<StopList
+				tasks={tasks}
+				setSelected={setSelected.bind(this)}
+				deleteStop={deleteStop.bind(this)}
+			/>
+			{/* Task Edit/New Stop */}
+			<div style={{
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				margin: "auto",
+				overflow: "auto", }} >
+				<TaskEdit
+					taskInput={taskInput}
+					setTaskInput={setTaskInput.bind(this)}
+					selected={selected}
+					addTask={addTask.bind(this)}
+					style={{ flexGrow: 2, width: "100%" }}
 				/>
-				<Button className="TaskButton" onClick={addTask}>
-					Click here to add a task
-				</Button>
-			</section>
-
-			<section className="AddStop">
-				<TextField
-					id="filled-basic"
-					className="StopTextField"
-					label="Add a Stop"
-					name="newStop.stopAddress"
-					variant="filled"
-					value={newStop.stopAddress}
-					onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
+				<AddStop
+					newStop={newStop}
+					setNewStop={setNewStop.bind(this)}
+					addStop={addStop.bind(this)}
 				/>
-				<Button className="StopButton" onClick={addStop}>
-					Click here to add a Stop to your route
-				</Button>
-			</section>
-			<br />
-			<div>
-				<Button onClick={handleSubmit}>Leave Route</Button>
 			</div>
-			<br />
-			<br />
 		</div>
 	);
 }
