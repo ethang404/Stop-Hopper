@@ -1,12 +1,13 @@
 import "./Room.css";
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {AddStop, StopList, TaskEdit} from "../navigation/RouteMenu";
-import {ShThemeDiv} from "../ShComponents";
+import {ShColorButton, ShColorButtonNoFullWidth, ShThemeDiv} from "../ShComponents";
 import {Typography} from "@mui/material";
 
 export default function Room() {
+	const navigate = useNavigate()
 	const { code } = useParams();
 
 	const [selected, setSelected] = useState("Pick a Stop");
@@ -116,10 +117,21 @@ export default function Room() {
 				flexDirection: "column",
 				gap: "10px", }} >
 			{/* Route Code */}
-			<ShThemeDiv className={"flex-container"} style={{margin: "auto", width: "100%"}}>
-				<Typography style={{margin: "10px"}} fontWeight={"bold"} fontSize={"24pt"}>
-					Route Code: {code}
-				</Typography>
+			<ShThemeDiv className={"flex-container"} style={{margin: "auto", overflow: "auto", width: "100%"}}>
+				<div style={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "space-evenly",
+					gap: "10px",
+					margin: "10px" }}
+				>
+					<Typography fontWeight={"bold"} fontSize={"24pt"}>
+						Route Code: {code}
+					</Typography>
+					<ShColorButton onClick={() => navigate("/RouteMenu/" + code)}>
+						Begin Route
+					</ShColorButton>
+				</div>
 			</ShThemeDiv>
 			{/* List of Stops/Tasks */}
 			<StopList
