@@ -11,6 +11,7 @@ import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StarsIcon from "@mui/icons-material/Stars";
 import { Fab, Button, TextField } from "@mui/material";
+import {ShColorButton, ShThemeDiv} from "../ShComponents";
 
 export default function RouteMenu() {
 	const routePolyline = useRef();
@@ -212,98 +213,113 @@ export default function RouteMenu() {
 
 	return (
 		<div>
-			<div className="mainMenu">
-				<LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-					<GoogleMap
-						center={center}
-						zoom={13}
-						//onLoad={(map) => onMapLoad(map)}
-						mapContainerStyle={{ height: "400px", width: "800px" }}
-						onLoad={calculateRoute}
+			<ShThemeDiv
+				style={{ margin: "auto" }}
+				className={"flex-container"} >
+				<div style={{
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "space-evenly",
+					gap: "10px",
+					margin: "10px"
+				}}>
+					<LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+						<GoogleMap
+							center={center}
+							zoom={13}
+							//onLoad={(map) => onMapLoad(map)}
+							mapContainerStyle={{ height: "640px", width: "520px" }}
+							onLoad={calculateRoute}
+						>
+							{directions && <DirectionsRenderer directions={directions} />}
+						</GoogleMap>
+					</LoadScript>
+					<ShColorButton
+						onClick={() => setIndex(index + 1)}
+						style={{ marginBottom: "10px" }}
 					>
-						{directions && <DirectionsRenderer directions={directions} />}
-					</GoogleMap>
-				</LoadScript>
-				<button onClick={() => setIndex(index + 1)}>Click to next Stop</button>
-				<div>
-					{tasks.map((task) => (
-						<div
-							key={task.id}
-							onClick={(e) => {
-								setSelected(task.Stop);
-								setIsActive(false);
+						Debug: Next Stop
+					</ShColorButton>
+				</div>
+			</ShThemeDiv>
+			<div>
+				{tasks.map((task) => (
+					<div
+						key={task.id}
+						onClick={(e) => {
+							setSelected(task.Stop);
+							setIsActive(false);
+						}}
+					>
+						<h3
+							onClick={() => {
+								deleteStop(task.Stop);
 							}}
 						>
-							<h3
-								onClick={() => {
-									deleteStop(task.Stop);
-								}}
-							>
-								{task.Stop}
-							</h3>
-							{task.TaskInfo.map((taskInfo) => (
-								<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
-									<div>id: {taskInfo.id}</div>
-									<div>taskName: {taskInfo.taskName}</div>
-									<div>stopId: {taskInfo.stopId}</div>
+							{task.Stop}
+						</h3>
+						{task.TaskInfo.map((taskInfo) => (
+							<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
+								<div>id: {taskInfo.id}</div>
+								<div>taskName: {taskInfo.taskName}</div>
+								<div>stopId: {taskInfo.stopId}</div>
+							</div>
+						))}
+					</div>
+				))}
+			</div>
+			<section className="AddTask">
+				<div className="dropdown">
+					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
+						{selected}
+					</div>
+					{isActive ? (
+						<div className="dropdown-content">
+							{tasks.map((task) => (
+								<div
+									key={task.id}
+									onClick={(e) => {
+										setIsActive(false);
+										setSelected(task.Stop);
+									}}
+								>
+									{task.Stop}
 								</div>
 							))}
 						</div>
-					))}
+					) : (
+						""
+					)}
 				</div>
-				<section className="AddTask">
-					<div className="dropdown">
-						<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
-							{selected}
-						</div>
-						{isActive ? (
-							<div className="dropdown-content">
-								{tasks.map((task) => (
-									<div
-										key={task.id}
-										onClick={(e) => {
-											setIsActive(false);
-											setSelected(task.Stop);
-										}}
-									>
-										{task.Stop}
-									</div>
-								))}
-							</div>
-						) : (
-							""
-						)}
-					</div>
 
-					<TextField
-						id="filled-basic"
-						className="TaskTextField"
-						label="Add a Task"
-						name="taskInput"
-						variant="filled"
-						value={taskInput}
-						onChange={(e) => setTaskInput(e.target.value)}
-					/>
-					<Button className="TaskButton" onClick={addTask}>
-						Click here to add a task
-					</Button>
-				</section>
+				<TextField
+					id="filled-basic"
+					className="TaskTextField"
+					label="Add a Task"
+					name="taskInput"
+					variant="filled"
+					value={taskInput}
+					onChange={(e) => setTaskInput(e.target.value)}
+				/>
+				<Button className="TaskButton" onClick={addTask}>
+					Click here to add a task
+				</Button>
+			</section>
 
-				<section className="AddStop">
-					<TextField
-						id="filled-basic"
-						className="StopTextField"
-						label="Add a Stop"
-						name="newStop.stopAddress"
-						variant="filled"
-						value={newStop.stopAddress}
-						onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
-					/>
-					<Button className="StopButton" onClick={addStop}>
-						Click here to add a Stop to your route
-					</Button>
-				</section>
-			</div>
+			<section className="AddStop">
+				<TextField
+					id="filled-basic"
+					className="StopTextField"
+					label="Add a Stop"
+					name="newStop.stopAddress"
+					variant="filled"
+					value={newStop.stopAddress}
+					onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
+				/>
+				<Button className="StopButton" onClick={addStop}>
+					Click here to add a Stop to your route
+				</Button>
+			</section>
 			<Fab
 				size="small"
 				className="detailButton"
