@@ -220,53 +220,68 @@ export default function RouteMenu() {
 	 */
 	function StopList(props) {
 
-		return <ShThemeDiv {...props} className={"flex-container"} style={{margin: "auto"}} >
+		return <ShThemeDiv {...props} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%"}} >
 			<div style={{
 				display: "flex",
 				flexDirection: "column",
 				justifyContent: "space-evenly",
 				gap: "10px",
-				margin: "10px" }}
+				margin: "10px",
+				overflow: "auto", }}
 			>
 				{tasks.map((task) => (
-					<div
-						key={task.id}
-						style={{
-							display: "flex",
-							flexDirection: "column",
-							justifyContent: "space-evenly",
-							gap: "10px", }}
-					>
-						<div style={{
-							display: "flex",
-							flexDirection: "row",
-							justifyContent: "space-between",
-							alignItems: "center", }}
+					<ShThemeDiv style={{ backgroundColor: "#fc7676" }} >
+						<div
+							key={task.id}
+							style={{
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "space-evenly",
+								gap: "10px",
+								margin: "10px" }}
 						>
-							<Typography style={{ marginLeft: "5px" }}>
-								{task.Stop}
-							</Typography>
-							<IconButton aria-label="delete" onClick={() => { deleteStop(task.Stop) }} >
-								<DeleteIcon />
-							</IconButton>
-						</div>
-						{task.TaskInfo.map((taskInfo) => (
-							<div key={taskInfo.id} onClick={() => deleteTask(taskInfo.id)}>
-								<div>id: {taskInfo.id}</div>
-								<div>taskName: {taskInfo.taskName}</div>
-								<div>stopId: {taskInfo.stopId}</div>
+							<div style={{
+								display: "flex",
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center"}}
+							>
+								<Typography style={{ marginLeft: "5px" }} fontWeight={"bold"} >
+									{task.Stop}
+								</Typography>
+								<IconButton aria-label="delete" onClick={() => { deleteStop(task.Stop) }} >
+									<DeleteIcon />
+								</IconButton>
 							</div>
-						))}
-					</div>
+							{ task.TaskInfo.length > 0 &&
+								<div>
+								{
+								task.TaskInfo.map((taskInfo) => (
+									<Typography style={{ textAlign: "left" }}>
+										ID: {taskInfo.id} <br/>
+										Task: {taskInfo.taskName} <br/>
+										Stop: {taskInfo.taskName} <br/>
+									</Typography>
+								))
+								}
+								</div>
+							}
+						</div>
+					</ShThemeDiv>
 				))}
 			</div>
 		</ShThemeDiv>
 	}
 
 	return (
-		<div>
+		<div style={{
+				display: "flex",
+				flexDirection: "column",
+				gap: "10px", }} >
 			<ShThemeDiv
-				style={{ margin: "auto" }}
+				style={{
+					margin: "auto",
+					overflow: "auto", }}
 				className={"flex-container"} >
 				<div style={{
 					display: "flex",
@@ -275,26 +290,28 @@ export default function RouteMenu() {
 					gap: "10px",
 					margin: "10px"
 				}}>
-					<LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
-						<GoogleMap
-							center={center}
-							zoom={13}
-							//onLoad={(map) => onMapLoad(map)}
-							mapContainerStyle={{ height: "640px", width: "520px" }}
-							onLoad={calculateRoute}
-						>
-							{directions && <DirectionsRenderer directions={directions} />}
-						</GoogleMap>
-					</LoadScript>
+					{/* Need extra div here as something with LoadScript/Map adds an extra div messing up spacing */}
+					<div>
+						<LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}>
+							<GoogleMap
+								center={center}
+								zoom={13}
+								//onLoad={(map) => onMapLoad(map)}
+								mapContainerStyle={{ height: "640px", width: "520px" }}
+								onLoad={calculateRoute}
+							>
+								{directions && <DirectionsRenderer directions={directions} />}
+							</GoogleMap>
+						</LoadScript>
+					</div>
 					<ShColorButton
 						onClick={() => setIndex(index + 1)}
-						style={{ marginBottom: "10px" }}
 					>
 						Debug: Next Stop
 					</ShColorButton>
 				</div>
 			</ShThemeDiv>
-			<StopList tasks={tasks}/>
+			<StopList />
 			<section className="AddTask">
 				<div className="dropdown">
 					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
