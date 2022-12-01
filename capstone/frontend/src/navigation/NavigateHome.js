@@ -329,7 +329,7 @@ export default function NavigateHome() {
 		data.map(stop => { delete stop.Edit })
 
 		const response = await submitStop(data)
-		const json = response.json();
+		const json = await response.json();
 
 		if (response.ok) {
 			navigate("/RouteMenu/" + json['RouteCode']);
