@@ -129,6 +129,46 @@ function TaskEdit(props) {
 	</ShThemeDiv>
 }
 
+/**
+ * Simple component to add a stop to the end of the route
+ *
+ * @param props props to add to the top level component
+ * @param props.newStop the value of the new stop text field
+ * @param props.setNewStop the method to call when the text field updates
+ * @param props.addStop the method to call when the add stop button is clicked
+ * @returns {JSX.Element}
+ * @constructor
+ */
+function AddStop(props) {
+	const childProps = {...props}
+	delete childProps.newStop
+	delete childProps.setNewStop
+	delete childProps.addStop
+
+	return <ShThemeDiv {...childProps} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
+		<div style={{
+			display: "flex",
+			flexDirection: "column",
+			justifyContent: "space-evenly",
+			gap: "10px",
+			margin: "10px",
+			overflow: "auto", }}
+			>
+			<Typography>
+				New Stop
+			</Typography>
+			<ShTextField
+				label="Add a Stop"
+				value={props.newStop.stopAddress}
+				onChange={(e) => props.setNewStop({ ...props.newStop, stopAddress: e.target.value })}
+			/>
+			<ShColorButton onClick={props.addStop}>
+				Stop Address
+			</ShColorButton>
+		</div>
+	</ShThemeDiv>
+}
+
 export default function RouteMenu() {
 	const routePolyline = useRef();
 	const { code } = useParams();
@@ -370,21 +410,12 @@ export default function RouteMenu() {
 				selected={selected}
 				addTask={addTask.bind(this)}
 			/>
+			<AddStop
+				newStop={newStop}
+				setNewStop={setNewStop.bind(this)}
+				addStop={addStop.bind(this)}
+			/>
 
-			<section className="AddStop">
-				<TextField
-					id="filled-basic"
-					className="StopTextField"
-					label="Add a Stop"
-					name="newStop.stopAddress"
-					variant="filled"
-					value={newStop.stopAddress}
-					onChange={(e) => setNewStop({ ...newStop, stopAddress: e.target.value })}
-				/>
-				<Button className="StopButton" onClick={addStop}>
-					Click here to add a Stop to your route
-				</Button>
-			</section>
 			<Fab
 				size="small"
 				className="detailButton"
