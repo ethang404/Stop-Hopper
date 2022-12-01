@@ -7,12 +7,13 @@ import {
 	Marker,
 	DirectionsService,
 } from "@react-google-maps/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import StarsIcon from "@mui/icons-material/Stars";
 import { Fab, Button, TextField } from "@mui/material";
 
 export default function RouteMenu() {
+	const routePolyline = useRef();
 	const { code } = useParams();
 	let navigate = useNavigate();
 
@@ -75,8 +76,14 @@ export default function RouteMenu() {
 		setTasks(data);
 	}
 	async function calculateRoute() {
+		if (directions) {
+			setDirections(null);
+			console.log(directions);
+		}
 		console.log(stopOrder.length);
 		console.log(index);
+		console.log(stopOrder[index]);
+		console.log(directions);
 		if (index >= stopOrder.length) {
 			alert("Finished Route");
 		}
@@ -98,6 +105,10 @@ export default function RouteMenu() {
 		}
 	}
 	async function logout() {
+		// Delete cookies used for login
+		localStorage.removeItem("accessToken");
+		localStorage.removeItem("refreshToken");
+
 		if (isFavorite) {
 			navigate("/");
 		} else {
