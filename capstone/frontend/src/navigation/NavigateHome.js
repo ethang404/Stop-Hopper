@@ -159,7 +159,7 @@ export default function NavigateHome() {
 									id="outlined-number"
 									type="number"
 									className="TextField"
-									label="Priority(1-7): "
+									label="Priority: "
 									name="Priority"
 									value={data[1].Priority}
 									onChange={(e) => handleChange(e, 1)}
@@ -206,7 +206,7 @@ export default function NavigateHome() {
 									id="outlined-number"
 									type="number"
 									className="TextField"
-									label="Priority(1-7): "
+									label="Priority: "
 									name="Priority"
 									value={data[2].Priority}
 									onChange={(e) => handleChange(e, 2)}
@@ -253,7 +253,7 @@ export default function NavigateHome() {
 									id="outlined-number"
 									type="number"
 									className="TextField"
-									label="Priority(1-7): "
+									label="Priority: "
 									name="Priority"
 									value={data[3].Priority}
 									onChange={(e) => handleChange(e, 3)}
@@ -300,7 +300,7 @@ export default function NavigateHome() {
 									id="outlined-number"
 									type="number"
 									className="TextField"
-									label="Priority(1-7): "
+									label="Priority: "
 									name="Priority"
 									value={data[4].Priority}
 									onChange={(e) => handleChange(e, 4)}
@@ -347,7 +347,7 @@ export default function NavigateHome() {
 									id="outlined-number"
 									type="number"
 									className="TextField"
-									label="Priority(1-7): "
+									label="Priority: "
 									name="Priority"
 									value={data[5].Priority}
 									onChange={(e) => handleChange(e, 5)}
@@ -394,7 +394,7 @@ export default function NavigateHome() {
 									id="outlined-number"
 									type="number"
 									className="TextField"
-									label="Priority(1-7): "
+									label="Priority: "
 									name="Priority"
 									value={data[6].Priority}
 									onChange={(e) => handleChange(e, 6)}
