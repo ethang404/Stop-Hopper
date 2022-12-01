@@ -12,7 +12,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import StarsIcon from "@mui/icons-material/Stars";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {Fab, Button, TextField, IconButton, Typography} from "@mui/material";
-import {ShColorButton, ShThemeDiv} from "../ShComponents";
+import {ShColorButton, ShTextField, ShThemeDiv} from "../ShComponents";
 
 export default function RouteMenu() {
 	const routePolyline = useRef();
@@ -26,15 +26,10 @@ export default function RouteMenu() {
 	const [index, setIndex] = useState(0);
 
 	const [isActive, setIsActive] = useState(false);
-	const [selected, setSelected] = useState("Pick a Stop");
+	const [selected, setSelected] = useState("Click a Stop Name to Add a Task");
 	const [taskInput, setTaskInput] = useState("");
 	const [isFavorite, setFavorite] = useState(false);
 
-	const [newTask, setNewTask] = useState({
-		RouteCode: code,
-		stopAddress: "Pick a Stop2",
-		taskName: "",
-	});
 	const [newStop, setNewStop] = useState({
 		routeCode: code,
 		stopAddress: "", //should be a address for now
@@ -140,7 +135,6 @@ export default function RouteMenu() {
 			stopAddress: selected,
 			taskName: taskInput,
 		};
-		console.log(newTask.RouteCode);
 		let resp = await fetch("http://127.0.0.1:8000/api/addTask/", {
 			method: "POST",
 			headers: {
@@ -245,6 +239,10 @@ export default function RouteMenu() {
 								flexDirection: "row",
 								justifyContent: "space-between",
 								alignItems: "center"}}
+								onClick={(e) => {
+									setSelected(task.Stop);
+									setIsActive(false);
+								}}
 							>
 								<Typography style={{ marginLeft: "5px" }} fontWeight={"bold"} >
 									{task.Stop}
@@ -258,9 +256,7 @@ export default function RouteMenu() {
 								{
 								task.TaskInfo.map((taskInfo) => (
 									<Typography style={{ textAlign: "left" }}>
-										ID: {taskInfo.id} <br/>
-										Task: {taskInfo.taskName} <br/>
-										Stop: {taskInfo.taskName} <br/>
+										{taskInfo.taskName}
 									</Typography>
 								))
 								}
@@ -269,6 +265,33 @@ export default function RouteMenu() {
 						</div>
 					</ShThemeDiv>
 				))}
+			</div>
+		</ShThemeDiv>
+	}
+
+	function TaskEdit(props) {
+		return <ShThemeDiv {...props} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
+			<div style={{
+				display: "flex",
+				flexDirection: "column",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				margin: "10px",
+				overflow: "auto", }}
+			>
+				<Typography
+					onClick={(e) => setIsActive(!isActive)}
+				>
+					{selected}
+				</Typography>
+				<ShTextField
+					label="Task"
+					value={taskInput}
+					onChange={(e) => setTaskInput(e.target.value)}
+				/>
+				<ShColorButton onClick={addTask} disabled={taskInput.trim() === ""}>
+					Add Task
+				</ShColorButton>
 			</div>
 		</ShThemeDiv>
 	}
@@ -312,43 +335,7 @@ export default function RouteMenu() {
 				</div>
 			</ShThemeDiv>
 			<StopList />
-			<section className="AddTask">
-				<div className="dropdown">
-					<div className="dropbtn" onClick={(e) => setIsActive(!isActive)}>
-						{selected}
-					</div>
-					{isActive ? (
-						<div className="dropdown-content">
-							{tasks.map((task) => (
-								<div
-									key={task.id}
-									onClick={(e) => {
-										setIsActive(false);
-										setSelected(task.Stop);
-									}}
-								>
-									{task.Stop}
-								</div>
-							))}
-						</div>
-					) : (
-						""
-					)}
-				</div>
-
-				<TextField
-					id="filled-basic"
-					className="TaskTextField"
-					label="Add a Task"
-					name="taskInput"
-					variant="filled"
-					value={taskInput}
-					onChange={(e) => setTaskInput(e.target.value)}
-				/>
-				<Button className="TaskButton" onClick={addTask}>
-					Click here to add a task
-				</Button>
-			</section>
+			<TaskEdit />
 
 			<section className="AddStop">
 				<TextField
