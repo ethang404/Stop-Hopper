@@ -211,17 +211,14 @@ function FavoriteToggle(props) {
 }
 
 export default function RouteMenu() {
-	const routePolyline = useRef();
 	const { code } = useParams();
 	let navigate = useNavigate();
 
-	const [currentLocation, setCurrentLocation] = useState({ lat: 0, lng: 0 });
 	const [tasks, setTasks] = useState([]);
 	const [directions, setDirections] = useState();
 	const [stopOrder, setStopOrder] = useState();
 	const [index, setIndex] = useState(0);
 
-	const [isActive, setIsActive] = useState(false);
 	const [selected, setSelected] = useState("Click a Stop Name to Add a Task");
 	const [taskInput, setTaskInput] = useState("");
 	const [isFavorite, setFavorite] = useState(false);
