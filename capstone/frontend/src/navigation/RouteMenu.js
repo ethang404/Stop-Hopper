@@ -103,7 +103,7 @@ function TaskEdit(props) {
 	delete childProps.selected
 	delete childProps.addTask
 
-	return <ShThemeDiv {...childProps} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
+	return <ShThemeDiv {...childProps} >
 		<form onSubmit={props.addTask}>
 			<div style={{
 				display: "flex",
@@ -145,7 +145,7 @@ function AddStop(props) {
 	delete childProps.setNewStop
 	delete childProps.addStop
 
-	return <ShThemeDiv {...childProps} className={"flex-container"} style={{ margin: "auto", overflow: "auto", width: "100%", }} >
+	return <ShThemeDiv {...childProps} >
 		<div style={{
 			display: "flex",
 			flexDirection: "column",
@@ -399,23 +399,34 @@ export default function RouteMenu() {
 					</ShColorButton>
 				</div>
 			</ShThemeDiv>
+			{/* List of Stops/Tasks */}
 			<StopList
 				tasks={tasks}
 				setSelected={setSelected.bind(this)}
 				deleteStop={deleteStop.bind(this)}
 			/>
-			<TaskEdit
-				taskInput={taskInput}
-				setTaskInput={setTaskInput.bind(this)}
-				selected={selected}
-				addTask={addTask.bind(this)}
-			/>
-			<AddStop
-				newStop={newStop}
-				setNewStop={setNewStop.bind(this)}
-				addStop={addStop.bind(this)}
-			/>
-
+			{/* Task Edit/New Stop */}
+			<div style={{
+				display: "flex",
+				flexDirection: "row",
+				justifyContent: "space-evenly",
+				gap: "10px",
+				margin: "auto",
+				overflow: "auto", }} >
+				<TaskEdit
+					taskInput={taskInput}
+					setTaskInput={setTaskInput.bind(this)}
+					selected={selected}
+					addTask={addTask.bind(this)}
+					style={{ flexGrow: 2, width: "100%" }}
+				/>
+				<AddStop
+					newStop={newStop}
+					setNewStop={setNewStop.bind(this)}
+					addStop={addStop.bind(this)}
+				/>
+			</div>
+			
 			<Fab
 				size="small"
 				className="detailButton"
